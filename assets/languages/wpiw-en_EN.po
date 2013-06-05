@@ -1,0 +1,66 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Instagram Widget\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-21 22:59-0000\n"
+"PO-Revision-Date: 2013-05-21 22:59-0000\n"
+"Last-Translator: Scott Evans @scottsweb <translate@scott.ee>\n"
+"Language-Team: @scottssweb <hi@scott.ee>\n"
+"Language: en_GB\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: /Users/scott/Dropbox/web/framework-wordpress/wp-content/"
+"plugins/wp-instagram-widget/\n"
+"X-Poedit-SourceCharset: utf-8\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: wp-instagram-widget.php:83
+msgid "Displays your latest Instagram photos"
+msgstr ""
+
+#: wp-instagram-widget.php:84 wp-instagram-widget.php:122
+msgid "Instagram"
+msgstr ""
+
+#: wp-instagram-widget.php:122
+msgid "Follow Us"
+msgstr ""
+
+#: wp-instagram-widget.php:129
+msgid "Title"
+msgstr ""
+
+#: wp-instagram-widget.php:130
+msgid "Username"
+msgstr ""
+
+#: wp-instagram-widget.php:131
+msgid "Number of Photos"
+msgstr ""
+
+#: wp-instagram-widget.php:132
+msgid "Photo Size"
+msgstr ""
+
+#: wp-instagram-widget.php:134
+msgid "Thumbnail"
+msgstr ""
+
+#: wp-instagram-widget.php:135
+msgid "Large"
+msgstr ""
+
+#: wp-instagram-widget.php:138
+msgid "Link Text"
+msgstr ""
+
+#: wp-instagram-widget.php:162
+msgid "Unable to communicate with instagram."
+msgstr ""
+
+#: wp-instagram-widget.php:169
+msgid "Instagram has returned invalid data."
+msgstr ""
