@@ -8,7 +8,7 @@ Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-WP Instagram widget is a very no fuss WordPress widget to showcase your latest Instagram pics.
+WP Instagram widget is a no fuss WordPress widget to showcase your latest Instagram pics.
 
 == Description ==
 
