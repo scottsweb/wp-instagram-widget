@@ -1,0 +1,15 @@
+{
+	"name"       : "cftp/wp-instagram-widget",
+	"description": "WP Instagram widget is a no fuss WordPress widget to showcase your latest Instagram pics.",
+	"type"       : "wordpress-plugin",
+	"license"    : "GPL-2.0+",
+	"authors"    : [
+		{
+			"name"    : "Code For The People",
+			"homepage": "http://codeforthepeople.com/"
+		}
+	],
+	"require": {
+		"composer/installers": "~1.0"
+	}
+}
