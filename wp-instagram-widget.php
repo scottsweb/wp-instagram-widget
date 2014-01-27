@@ -169,26 +169,30 @@ class null_instagram_widget extends WP_Widget {
 			if (is_wp_error($remote)) 
 	  			return new WP_Error('site_down', __('Unable to communicate with instagram.', $this->wpiwdomain));
 
-			$shards = explode('"bootstrap",[', $remote['body']);
-			$insta_json = explode('}]]', $shards[1]);
-			$insta_array = json_decode($insta_json[0].'}', TRUE);
+			$shards = explode('window._sharedData = ', $remote['body']);
+			$insta_json = explode(';</script>', $shards[1]);
+			$insta_array = json_decode($insta_json[0], TRUE);
 
 			if (!$insta_array)
 	  			return new WP_Error('bad_json', __('Instagram has returned invalid data.', $this->wpiwdomain));
 
-			$images = $insta_array['props']['userMedia'];
+			$images = $insta_array['entry_data']['UserProfile'][0]['userMedia'];
 
 			$instagram = array();
 			foreach ($images as $image) {
-				$instagram[] = array(
-					'description' 	=> $image['caption']['text'],
-					'link' 			=> $image['link'],
-					'time'			=> $image['created_time'],
-					'comments' 		=> $image['comments']['count'],
-					'likes' 		=> $image['likes']['count'],
-					'thumbnail' 	=> $image['images']['thumbnail'],
-					'large' 		=> $image['images']['standard_resolution']
-				);
+
+				if ($image['type'] == 'image' && $image['user']['username'] == $username) {
+
+					$instagram[] = array(
+						'description' 	=> $image['caption']['text'],
+						'link' 			=> $image['link'],
+						'time'			=> $image['created_time'],
+						'comments' 		=> $image['comments']['count'],
+						'likes' 		=> $image['likes']['count'],
+						'thumbnail' 	=> $image['images']['thumbnail'],
+						'large' 		=> $image['images']['standard_resolution']
+					);
+				}
 			}
 			set_transient('instagram-pics-'.sanitize_title_with_dashes($username), $instagram, apply_filters('null_instagram_cache_time', HOUR_IN_SECONDS*2));
 		}
