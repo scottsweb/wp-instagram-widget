@@ -120,7 +120,7 @@ class null_instagram_widget extends WP_Widget {
 		}
 
 		if ($link != '') {
-			?><p class="clear"><a href="http://instagram.com/<?php echo $username; ?>"><?php echo $link; ?></a></p><?php  
+			?><p class="clear"><a href="http://instagram.com/<?php echo trim($username); ?>"><?php echo $link; ?></a></p><?php  
 		}
 
 		echo $after_widget; 
@@ -151,7 +151,7 @@ class null_instagram_widget extends WP_Widget {
 	function update($new_instance, $old_instance) {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags($new_instance['title']);
-		$instance['username'] = strip_tags($new_instance['username']);
+		$instance['username'] = trim(strip_tags($new_instance['username']));
 		$instance['number'] = !absint($new_instance['number']) ? 9 : $new_instance['number'];
 		$instance['size'] = (($new_instance['size'] == 'thumbnail' || $new_instance['size'] == 'large') ? $new_instance['size'] : 'thumbnail');
 		$instance['link'] = strip_tags($new_instance['link']);
@@ -163,8 +163,8 @@ class null_instagram_widget extends WP_Widget {
 
 		if (false === ($instagram = get_transient('instagram-pics-'.sanitize_title_with_dashes($username)))) {
 			
-			$remote = wp_remote_get('http://instagram.com/'.$username);
-			
+			$remote = wp_remote_get('http://instagram.com/'.trim($username));
+
 			if (is_wp_error($remote)) 
 	  			return new WP_Error('site_down', __('Unable to communicate with instagram.', $this->wpiwdomain));
 
