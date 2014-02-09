@@ -163,9 +163,8 @@ class null_instagram_widget extends WP_Widget {
 
 		if (false === ($instagram = get_transient('instagram-pics-'.sanitize_title_with_dashes($username)))) {
 			
-			$insta_source = file_get_contents('http://instagram.com/'.$username);
 			$remote = wp_remote_get('http://instagram.com/'.$username);
-
+			
 			if (is_wp_error($remote)) 
 	  			return new WP_Error('site_down', __('Unable to communicate with instagram.', $this->wpiwdomain));
 
