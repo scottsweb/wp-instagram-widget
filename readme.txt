@@ -55,6 +55,9 @@ function my_cache_time() {
 
 == Changelog ==
 
+= 1.2.1 = 
+* Change transient name due to data change
+
 = 1.2 =
 * Better error handling
 * Encode emoji as they cause transient issues

@@ -3,7 +3,7 @@
 Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/cftp/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos
-Version: 1.2
+Version: 1.2.1
 Author: Code For The People
 Author URI: http://codeforthepeople.com
 Text Domain: wpiw
@@ -161,7 +161,7 @@ class null_instagram_widget extends WP_Widget {
 	// based on https://gist.github.com/cosmocatalano/4544576
 	function scrape_instagram($username, $slice = 9) {
 
-		if (false === ($instagram = get_transient('instagram-pics-'.sanitize_title_with_dashes($username)))) {
+		if (false === ($instagram = get_transient('instagram-photos-'.sanitize_title_with_dashes($username)))) {
 			
 			$remote = wp_remote_get('http://instagram.com/'.trim($username));
 
@@ -198,11 +198,11 @@ class null_instagram_widget extends WP_Widget {
 			}
 
 			$instagram = base64_encode( serialize( $instagram ) );
-			set_transient('instagram-pics-'.sanitize_title_with_dashes($username), $instagram, apply_filters('null_instagram_cache_time', HOUR_IN_SECONDS*2));
+			set_transient('instagram-photos-'.sanitize_title_with_dashes($username), $instagram, apply_filters('null_instagram_cache_time', HOUR_IN_SECONDS*2));
 		}
 
 		$instagram = unserialize( base64_decode( $instagram ) );
-		
+
 		return array_slice($instagram, 0, $slice);
 	}
 }
