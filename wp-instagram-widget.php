@@ -3,7 +3,7 @@
 Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/cftp/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos
-Version: 1.1
+Version: 1.2
 Author: Code For The People
 Author URI: http://codeforthepeople.com
 Text Domain: wpiw
@@ -166,7 +166,10 @@ class null_instagram_widget extends WP_Widget {
 			$remote = wp_remote_get('http://instagram.com/'.trim($username));
 
 			if (is_wp_error($remote)) 
-	  			return new WP_Error('site_down', __('Unable to communicate with instagram.', $this->wpiwdomain));
+	  			return new WP_Error('site_down', __('Unable to communicate with Instagram.', $this->wpiwdomain));
+
+  			if ( 200 != wp_remote_retrieve_response_code( $remote ) ) 
+  				return new WP_Error('invalid_response', __('Instagram did not return a 200.', $this->wpiwdomain));
 
 			$shards = explode('window._sharedData = ', $remote['body']);
 			$insta_json = explode(';</script>', $shards[1]);
@@ -193,9 +196,13 @@ class null_instagram_widget extends WP_Widget {
 					);
 				}
 			}
+
+			$instagram = base64_encode( serialize( $instagram ) );
 			set_transient('instagram-pics-'.sanitize_title_with_dashes($username), $instagram, apply_filters('null_instagram_cache_time', HOUR_IN_SECONDS*2));
 		}
 
+		$instagram = unserialize( base64_decode( $instagram ) );
+		
 		return array_slice($instagram, 0, $slice);
 	}
 }

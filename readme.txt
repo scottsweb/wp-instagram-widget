@@ -55,6 +55,10 @@ function my_cache_time() {
 
 == Changelog ==
 
+= 1.2 =
+* Better error handling
+* Encode emoji as they cause transient issues
+
 = 1.1 =
 * Fix issue with Instagram feed 
 * Add composer.json 
