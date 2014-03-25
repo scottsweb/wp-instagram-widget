@@ -1,6 +1,5 @@
 === WP Instagram Widget ===
 Contributors: scottsweb, codeforthepeople
-Donate link: https://flattr.com/profile/scottsweb/things
 Tags: instagram, widget, photos, photography, hipster, sidebar, widgets, simple
 Requires at least: 3.0
 Tested up to: 3.8.1
