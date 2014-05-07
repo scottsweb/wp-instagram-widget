@@ -101,12 +101,13 @@ class null_instagram_widget extends WP_Widget {
 		$limit = empty($instance['number']) ? 9 : $instance['number'];
 		$size = empty($instance['size']) ? 'thumbnail' : $instance['size'];
 		$link = empty($instance['link']) ? '' : $instance['link'];
+		$imagesOnly = isset($imagesOnly) ? $imagesOnly : true;
 		
 		echo $before_widget;
 		if(!empty($title)) { echo $before_title . $title . $after_title; };
 		
 		if ($username != '') {
-			$images_array = $this->scrape_instagram($username, $limit);
+			$images_array = $this->scrape_instagram($username, $limit, $imagesOnly);
 
 			if ( is_wp_error($images_array) ) {
 			   echo $images_array->get_error_message();
@@ -159,9 +160,9 @@ class null_instagram_widget extends WP_Widget {
 	}
 
 	// based on https://gist.github.com/cosmocatalano/4544576
-	function scrape_instagram($username, $slice = 9) {
+	function scrape_instagram($username, $slice = 9, $imagesOnly = true) {
 
-		if (false === ($instagram = get_transient('instagram-photos-'.sanitize_title_with_dashes($username)))) {
+		if (false === ($instagram = get_transient('instagram-media-'.sanitize_title_with_dashes($username)))) {
 			
 			$remote = wp_remote_get('http://instagram.com/'.trim($username));
 
@@ -183,7 +184,7 @@ class null_instagram_widget extends WP_Widget {
 			$instagram = array();
 			foreach ($images as $image) {
 
-				if ($image['type'] == 'image' && $image['user']['username'] == $username) {
+				if ($image['user']['username'] == $username) {
 
 					$instagram[] = array(
 						'description' 	=> $image['caption']['text'],
@@ -192,17 +193,30 @@ class null_instagram_widget extends WP_Widget {
 						'comments' 		=> $image['comments']['count'],
 						'likes' 		=> $image['likes']['count'],
 						'thumbnail' 	=> $image['images']['thumbnail'],
-						'large' 		=> $image['images']['standard_resolution']
+						'large' 		=> $image['images']['standard_resolution'],
+                        			'type'          => $image['type']
+						
 					);
 				}
 			}
 
 			$instagram = base64_encode( serialize( $instagram ) );
-			set_transient('instagram-photos-'.sanitize_title_with_dashes($username), $instagram, apply_filters('null_instagram_cache_time', HOUR_IN_SECONDS*2));
+			set_transient('instagram-media-'.sanitize_title_with_dashes($username), $instagram, apply_filters('null_instagram_cache_time', HOUR_IN_SECONDS*2));
 		}
 
 		$instagram = unserialize( base64_decode( $instagram ) );
-
+		
+	        if ( true == $imagesOnly ) {
+	            $result = array();
+	            foreach ( $instagram as $node )
+	            {
+	                if ( $node['type'] == 'image' ){
+	                    $result[] = $node;
+	                }
+	            }
+	            $instagram = $result;
+	        }
+	        
 		return array_slice($instagram, 0, $slice);
 	}
 }
