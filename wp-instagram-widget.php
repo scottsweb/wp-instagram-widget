@@ -4,7 +4,7 @@ Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/cftp/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos
 Version: 1.2.1
-Author: Code For The People
+Author: Scott Evans (Code For The People)
 Author URI: http://codeforthepeople.com
 Text Domain: wpiw
 Domain Path: /assets/languages/
