@@ -120,7 +120,7 @@ class null_instagram_widget extends WP_Widget {
 		}
 
 		if ($link != '') {
-			?><p class="clear"><a href="http://instagram.com/<?php echo trim($username); ?>"><?php echo $link; ?></a></p><?php  
+			?><p class="clear"><a href="//instagram.com/<?php echo trim($username); ?>"><?php echo $link; ?></a></p><?php  
 		}
 
 		echo $after_widget; 
@@ -184,15 +184,19 @@ class null_instagram_widget extends WP_Widget {
 			foreach ($images as $image) {
 
 				if ($image['type'] == 'image' && $image['user']['username'] == $username) {
+					
+					$image['link']                          = preg_replace( "/^http:/i", "", $image['link'] );
+					$image['images']['thumbnail']           = preg_replace( "/^http:/i", "", $image['images']['thumbnail'] );
+					$image['images']['standard_resolution'] = preg_replace( "/^http:/i", "", $image['images']['standard_resolution'] );
 
 					$instagram[] = array(
 						'description' 	=> $image['caption']['text'],
-						'link' 			=> $image['link'],
-						'time'			=> $image['created_time'],
-						'comments' 		=> $image['comments']['count'],
-						'likes' 		=> $image['likes']['count'],
+						'link' 		=> $image['link'],
+						'time'		=> $image['created_time'],
+						'comments' 	=> $image['comments']['count'],
+						'likes' 	=> $image['likes']['count'],
 						'thumbnail' 	=> $image['images']['thumbnail'],
-						'large' 		=> $image['images']['standard_resolution']
+						'large' 	=> $image['images']['standard_resolution']
 					);
 				}
 			}
