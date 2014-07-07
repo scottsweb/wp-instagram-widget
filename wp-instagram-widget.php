@@ -113,7 +113,7 @@ class null_instagram_widget extends WP_Widget {
 			} else {
 				?><ul class="instagram-pics"><?php
 				foreach ($images_array as $image) {
-					echo '<li><a href="'.$image['link'].'"><img src="'. esc_attr( $image[$size]['url'] ).'"  alt="'. esc_attr( $image['description'] ) .'" title="'. esc_attr( $image['description'] ).'"/></a></li>';
+					echo '<li><a href="'. esc_url( $image['link'] ) .'"><img src="'. esc_url($image[$size]['url']) .'"  alt="'. esc_attr( $image['description'] ) .'" title="'. esc_attr( $image['description'] ).'"/></a></li>';
 				}
 				?></ul><?php
 			}
