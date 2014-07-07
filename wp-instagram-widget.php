@@ -1,5 +1,5 @@
 <?php
-/*
+/*	
 Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/cftp/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos
@@ -44,13 +44,13 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 */
-
+	
 // load is_plugin_active function if required
 if (!function_exists('is_plugin_inactive')) require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
 
 // registers widget when bundled with the null framework
 if (is_plugin_inactive('wp-instagram-widget/wordpress-instagram-widget.php') && function_exists('null_get_extensions')) {
-
+	
 	// register
 	register_widget('null_instagram_widget');
 
@@ -84,27 +84,27 @@ function wpiw_widget() {
 }
 
 class null_instagram_widget extends WP_Widget {
-
+	
 	function null_instagram_widget() {
 		global $wpiwdomain;
 		$this->wpiwdomain = $wpiwdomain;
 		$widget_ops = array('classname' => 'null-instagram-feed', 'description' => __('Displays your latest Instagram photos', $this->wpiwdomain) );
-		$this->WP_Widget('null-instagram-feed', __('Instagram', $this->wpiwdomain), $widget_ops);
+		$this->WP_Widget('null-instagram-feed', __('Instagram', $this->wpiwdomain), $widget_ops);	
 	}
 
 	function widget($args, $instance) {
-
+		
 		extract($args, EXTR_SKIP);
-
-		$title = empty($instance['title']) ? '' : apply_filters('widget_title', $instance['title']);
+		
+		$title = empty($instance['title']) ? '' : apply_filters('widget_title', $instance['title']);	
 		$username = empty($instance['username']) ? '' : $instance['username'];
 		$limit = empty($instance['number']) ? 9 : $instance['number'];
 		$size = empty($instance['size']) ? 'thumbnail' : $instance['size'];
 		$link = empty($instance['link']) ? '' : $instance['link'];
-
+		
 		echo $before_widget;
 		if(!empty($title)) { echo $before_title . $title . $after_title; };
-
+		
 		if ($username != '') {
 			$images_array = $this->scrape_instagram($username, $limit);
 
@@ -120,10 +120,10 @@ class null_instagram_widget extends WP_Widget {
 		}
 
 		if ($link != '') {
-			?><p class="clear"><a href="http://instagram.com/<?php echo trim($username); ?>"><?php echo $link; ?></a></p><?php
+			?><p class="clear"><a href="//instagram.com/<?php echo trim($username); ?>"><?php echo $link; ?></a></p><?php  
 		}
 
-		echo $after_widget;
+		echo $after_widget; 
 	}
 
 	function form($instance) {
@@ -162,13 +162,13 @@ class null_instagram_widget extends WP_Widget {
 	function scrape_instagram($username, $slice = 9) {
 
 		if (false === ($instagram = get_transient('instagram-photos-'.sanitize_title_with_dashes($username)))) {
-
+			
 			$remote = wp_remote_get('http://instagram.com/'.trim($username));
 
-			if (is_wp_error($remote))
+			if (is_wp_error($remote)) 
 	  			return new WP_Error('site_down', __('Unable to communicate with Instagram.', $this->wpiwdomain));
 
-  			if ( 200 != wp_remote_retrieve_response_code( $remote ) )
+  			if ( 200 != wp_remote_retrieve_response_code( $remote ) ) 
   				return new WP_Error('invalid_response', __('Instagram did not return a 200.', $this->wpiwdomain));
 
 			$shards = explode('window._sharedData = ', $remote['body']);
@@ -184,15 +184,19 @@ class null_instagram_widget extends WP_Widget {
 			foreach ($images as $image) {
 
 				if ($image['type'] == 'image' && $image['user']['username'] == $username) {
+					
+					$image['link']                          = preg_replace( "/^http:/i", "", $image['link'] );
+					$image['images']['thumbnail']           = preg_replace( "/^http:/i", "", $image['images']['thumbnail'] );
+					$image['images']['standard_resolution'] = preg_replace( "/^http:/i", "", $image['images']['standard_resolution'] );
 
 					$instagram[] = array(
 						'description' 	=> $image['caption']['text'],
-						'link' 			=> $image['link'],
-						'time'			=> $image['created_time'],
-						'comments' 		=> $image['comments']['count'],
-						'likes' 		=> $image['likes']['count'],
+						'link' 		=> $image['link'],
+						'time'		=> $image['created_time'],
+						'comments' 	=> $image['comments']['count'],
+						'likes' 	=> $image['likes']['count'],
 						'thumbnail' 	=> $image['images']['thumbnail'],
-						'large' 		=> $image['images']['standard_resolution']
+						'large' 	=> $image['images']['standard_resolution']
 					);
 				}
 			}
