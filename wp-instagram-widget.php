@@ -100,6 +100,7 @@ class null_instagram_widget extends WP_Widget {
 		$username = empty($instance['username']) ? '' : $instance['username'];
 		$limit = empty($instance['number']) ? 9 : $instance['number'];
 		$size = empty($instance['size']) ? 'thumbnail' : $instance['size'];
+		$target = empty($instance['target']) ? '_self' : $instance['target'];
 		$link = empty($instance['link']) ? '' : $instance['link'];
 
 		echo $before_widget;
@@ -123,14 +124,14 @@ class null_instagram_widget extends WP_Widget {
 
 				?><ul class="instagram-pics"><?php
 				foreach ($media_array as $item) {
-					echo '<li><a href="'. esc_url( $item['link'] ) .'"><img src="'. esc_url($item[$size]['url']) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"/></a></li>';
+					echo '<li><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"><img src="'. esc_url($item[$size]['url']) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"/></a></li>';
 				}
 				?></ul><?php
 			}
 		}
 
 		if ($link != '') {
-			?><p class="clear"><a href="//instagram.com/<?php echo trim($username); ?>" rel="me"><?php echo $link; ?></a></p><?php
+			?><p class="clear"><a href="//instagram.com/<?php echo trim($username); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo $link; ?></a></p><?php
 		}
 
 		do_action( 'wpiw_before_widget', $instance );
@@ -139,23 +140,30 @@ class null_instagram_widget extends WP_Widget {
 	}
 
 	function form($instance) {
-		$instance = wp_parse_args( (array) $instance, array( 'title' => __('Instagram', $this->wpiwdomain), 'username' => '', 'link' => __('Follow Us', $this->wpiwdomain), 'number' => 9, 'size' => 'thumbnail') );
+		$instance = wp_parse_args( (array) $instance, array( 'title' => __('Instagram', $this->wpiwdomain), 'username' => '', 'link' => __('Follow Us', $this->wpiwdomain), 'number' => 9, 'size' => 'thumbnail', 'target' => '_self') );
 		$title = esc_attr($instance['title']);
 		$username = esc_attr($instance['username']);
 		$number = absint($instance['number']);
 		$size = esc_attr($instance['size']);
+		$target = esc_attr($instance['target']);
 		$link = esc_attr($instance['link']);
 		?>
 		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', $this->wpiwdomain); ?>: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
 		<p><label for="<?php echo $this->get_field_id('username'); ?>"><?php _e('Username', $this->wpiwdomain); ?>: <input class="widefat" id="<?php echo $this->get_field_id('username'); ?>" name="<?php echo $this->get_field_name('username'); ?>" type="text" value="<?php echo $username; ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of Photos', $this->wpiwdomain); ?>: <input class="widefat" id="<?php echo $this->get_field_id('number'); ?>" name="<?php echo $this->get_field_name('number'); ?>" type="text" value="<?php echo $number; ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id('size'); ?>"><?php _e('Photo Size', $this->wpiwdomain); ?>:</label>
+		<p><label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of photos', $this->wpiwdomain); ?>: <input class="widefat" id="<?php echo $this->get_field_id('number'); ?>" name="<?php echo $this->get_field_name('number'); ?>" type="text" value="<?php echo $number; ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id('size'); ?>"><?php _e('Photo size', $this->wpiwdomain); ?>:</label>
 			<select id="<?php echo $this->get_field_id('size'); ?>" name="<?php echo $this->get_field_name('size'); ?>" class="widefat">
 				<option value="thumbnail" <?php selected('thumbnail', $size) ?>><?php _e('Thumbnail', $this->wpiwdomain); ?></option>
 				<option value="large" <?php selected('large', $size) ?>><?php _e('Large', $this->wpiwdomain); ?></option>
 			</select>
 		</p>
-		<p><label for="<?php echo $this->get_field_id('link'); ?>"><?php _e('Link Text', $this->wpiwdomain); ?>: <input class="widefat" id="<?php echo $this->get_field_id('link'); ?>" name="<?php echo $this->get_field_name('link'); ?>" type="text" value="<?php echo $link; ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id('target'); ?>"><?php _e('Open links in', $this->wpiwdomain); ?>:</label>
+			<select id="<?php echo $this->get_field_id('target'); ?>" name="<?php echo $this->get_field_name('target'); ?>" class="widefat">
+				<option value="_self" <?php selected('_self', $target) ?>><?php _e('Current window (_self)', $this->wpiwdomain); ?></option>
+				<option value="_blank" <?php selected('_blank', $target) ?>><?php _e('New window (_blank)', $this->wpiwdomain); ?></option>
+			</select>
+		</p>
+		<p><label for="<?php echo $this->get_field_id('link'); ?>"><?php _e('Link text', $this->wpiwdomain); ?>: <input class="widefat" id="<?php echo $this->get_field_id('link'); ?>" name="<?php echo $this->get_field_name('link'); ?>" type="text" value="<?php echo $link; ?>" /></label></p>
 		<?php
 
 	}
@@ -166,6 +174,7 @@ class null_instagram_widget extends WP_Widget {
 		$instance['username'] = trim(strip_tags($new_instance['username']));
 		$instance['number'] = !absint($new_instance['number']) ? 9 : $new_instance['number'];
 		$instance['size'] = (($new_instance['size'] == 'thumbnail' || $new_instance['size'] == 'large') ? $new_instance['size'] : 'thumbnail');
+		$instance['target'] = (($new_instance['target'] == '_self' || $new_instance['target'] == '_blank') ? $new_instance['target'] : '_self');
 		$instance['link'] = strip_tags($new_instance['link']);
 		return $instance;
 	}
