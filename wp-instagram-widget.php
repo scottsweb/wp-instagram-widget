@@ -113,14 +113,14 @@ class null_instagram_widget extends WP_Widget {
 			} else {
 				?><ul class="instagram-pics"><?php
 				foreach ($images_array as $image) {
-					echo '<li><a href="'.$image['link'].'"><img src="'.$image[$size]['url'].'"  alt="'.$image['description'].'" title="'.$image['description'].'"/></a></li>';
+					echo '<li><a href="'.$image['link'].'"><img src="'. esc_attr( $image[$size]['url'] ).'"  alt="'. esc_attr( $image['description'] ) .'" title="'. esc_attr( $image['description'] ).'"/></a></li>';
 				}
 				?></ul><?php
 			}
 		}
 
 		if ($link != '') {
-			?><p class="clear"><a href="//instagram.com/<?php echo trim($username); ?>"><?php echo $link; ?></a></p><?php
+			?><p class="clear"><a href="//instagram.com/<?php echo trim($username); ?>" rel="me"><?php echo $link; ?></a></p><?php
 		}
 
 		echo $after_widget;
