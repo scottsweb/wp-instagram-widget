@@ -105,7 +105,7 @@ class null_instagram_widget extends WP_Widget {
 		echo $before_widget;
 		if(!empty($title)) { echo $before_title . $title . $after_title; };
 
-		do_action( 'wpiw_before_widget' );
+		do_action( 'wpiw_before_widget', $instance );
 
 		if ($username != '') {
 			$images_array = $this->scrape_instagram($username, $limit);
@@ -125,7 +125,7 @@ class null_instagram_widget extends WP_Widget {
 			?><p class="clear"><a href="//instagram.com/<?php echo trim($username); ?>" rel="me"><?php echo $link; ?></a></p><?php
 		}
 
-		do_action( 'wpiw_before_widget' );
+		do_action( 'wpiw_before_widget', $instance );
 
 		echo $after_widget;
 	}
