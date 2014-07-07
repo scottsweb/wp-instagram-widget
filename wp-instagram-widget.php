@@ -108,14 +108,22 @@ class null_instagram_widget extends WP_Widget {
 		do_action( 'wpiw_before_widget', $instance );
 
 		if ($username != '') {
-			$images_array = $this->scrape_instagram($username, $limit);
 
-			if ( is_wp_error($images_array) ) {
-			   echo $images_array->get_error_message();
+			$media_array = $this->scrape_instagram($username, $limit);
+
+			if ( is_wp_error($media_array) ) {
+
+			   echo $media_array->get_error_message();
+
 			} else {
+
+				// filter for images only?
+				if ( $images_only = apply_filters( 'wpiw_images_only', FALSE ) )
+					$media_array = array_filter( $media_array, array( $this, 'images_only' ) );
+
 				?><ul class="instagram-pics"><?php
-				foreach ($images_array as $image) {
-					echo '<li><a href="'. esc_url( $image['link'] ) .'"><img src="'. esc_url($image[$size]['url']) .'"  alt="'. esc_attr( $image['description'] ) .'" title="'. esc_attr( $image['description'] ).'"/></a></li>';
+				foreach ($media_array as $item) {
+					echo '<li><a href="'. esc_url( $item['link'] ) .'"><img src="'. esc_url($item[$size]['url']) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"/></a></li>';
 				}
 				?></ul><?php
 			}
@@ -165,7 +173,7 @@ class null_instagram_widget extends WP_Widget {
 	// based on https://gist.github.com/cosmocatalano/4544576
 	function scrape_instagram($username, $slice = 9) {
 
-		if (false === ($instagram = get_transient('instagram-photos-'.sanitize_title_with_dashes($username)))) {
+		if (false === ($instagram = get_transient('instagram-media-'.sanitize_title_with_dashes($username)))) {
 
 			$remote = wp_remote_get('http://instagram.com/'.trim($username));
 
@@ -185,9 +193,10 @@ class null_instagram_widget extends WP_Widget {
 			$images = $insta_array['entry_data']['UserProfile'][0]['userMedia'];
 
 			$instagram = array();
+
 			foreach ($images as $image) {
 
-				if ($image['type'] == 'image' && $image['user']['username'] == $username) {
+				if ($image['user']['username'] == $username) {
 
 					$image['link']                          = preg_replace( "/^http:/i", "", $image['link'] );
 					$image['images']['thumbnail']           = preg_replace( "/^http:/i", "", $image['images']['thumbnail'] );
@@ -200,18 +209,27 @@ class null_instagram_widget extends WP_Widget {
 						'comments'      => $image['comments']['count'],
 						'likes'         => $image['likes']['count'],
 						'thumbnail'     => $image['images']['thumbnail'],
-						'large'         => $image['images']['standard_resolution']
+						'large'         => $image['images']['standard_resolution'],
+						'type'          => $image['type']
 					);
 				}
 			}
 
 			$instagram = base64_encode( serialize( $instagram ) );
-			set_transient('instagram-photos-'.sanitize_title_with_dashes($username), $instagram, apply_filters('null_instagram_cache_time', HOUR_IN_SECONDS*2));
+			set_transient('instagram-media-'.sanitize_title_with_dashes($username), $instagram, apply_filters('null_instagram_cache_time', HOUR_IN_SECONDS*2));
 		}
 
 		$instagram = unserialize( base64_decode( $instagram ) );
 
 		return array_slice($instagram, 0, $slice);
+	}
+
+	function images_only($media_item) {
+
+		if ($media_item['type'] == 'image')
+			return true;
+
+		return false;
 	}
 }
 ?>
