@@ -182,6 +182,8 @@ class null_instagram_widget extends WP_Widget {
 	// based on https://gist.github.com/cosmocatalano/4544576
 	function scrape_instagram($username, $slice = 9) {
 
+		$username = strtolower($username);
+
 		if (false === ($instagram = get_transient('instagram-media-'.sanitize_title_with_dashes($username)))) {
 
 			$remote = wp_remote_get('http://instagram.com/'.trim($username));
