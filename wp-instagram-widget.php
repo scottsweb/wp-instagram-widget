@@ -134,7 +134,7 @@ class null_instagram_widget extends WP_Widget {
 			?><p class="clear"><a href="//instagram.com/<?php echo trim($username); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo $link; ?></a></p><?php
 		}
 
-		do_action( 'wpiw_before_widget', $instance );
+		do_action( 'wpiw_after_widget', $instance );
 
 		echo $after_widget;
 	}
