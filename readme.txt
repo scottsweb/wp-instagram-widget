@@ -58,8 +58,8 @@ In version 1.3 you also have two new hooks for adding custom output before and a
 
 == Screenshots ==
 
-1. Instagram widget on the widgets wp-admin screen.
-2. Instagram widget on the front end
+1. Instagram widget on the front end
+2. Instagram widget in the theme customiser
 
 == Changelog ==
 
