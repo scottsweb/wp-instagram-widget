@@ -2,7 +2,7 @@
 Contributors: scottsweb, codeforthepeople
 Tags: instagram, widget, photos, photography, hipster, sidebar, widgets, simple
 Requires at least: 3.0
-Tested up to: 3.9.1
+Tested up to: 4.0
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -62,6 +62,10 @@ In version 1.3 you also have two new hooks for adding custom output before and a
 2. Instagram widget in the theme customiser
 
 == Changelog ==
+
+= 1.3.1 =
+* Force lowercase usernames
+* Correct hook name
 
 = 1.3 =
 * Option to open links in new window
