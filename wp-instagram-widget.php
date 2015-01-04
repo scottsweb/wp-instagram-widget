@@ -154,6 +154,7 @@ class null_instagram_widget extends WP_Widget {
 		<p><label for="<?php echo $this->get_field_id('size'); ?>"><?php _e('Photo size', $this->wpiwdomain); ?>:</label>
 			<select id="<?php echo $this->get_field_id('size'); ?>" name="<?php echo $this->get_field_name('size'); ?>" class="widefat">
 				<option value="thumbnail" <?php selected('thumbnail', $size) ?>><?php _e('Thumbnail', $this->wpiwdomain); ?></option>
+				<option value="small" <?php selected('small', $size) ?>><?php _e('Small', $this->wpiwdomain); ?></option>
 				<option value="large" <?php selected('large', $size) ?>><?php _e('Large', $this->wpiwdomain); ?></option>
 			</select>
 		</p>
@@ -173,7 +174,7 @@ class null_instagram_widget extends WP_Widget {
 		$instance['title'] = strip_tags($new_instance['title']);
 		$instance['username'] = trim(strip_tags($new_instance['username']));
 		$instance['number'] = !absint($new_instance['number']) ? 9 : $new_instance['number'];
-		$instance['size'] = (($new_instance['size'] == 'thumbnail' || $new_instance['size'] == 'large') ? $new_instance['size'] : 'thumbnail');
+		$instance['size'] = (($new_instance['size'] == 'thumbnail' || $new_instance['size'] == 'large' || $new_instance['size'] == 'small') ? $new_instance['size'] : 'thumbnail');
 		$instance['target'] = (($new_instance['target'] == '_self' || $new_instance['target'] == '_blank') ? $new_instance['target'] : '_self');
 		$instance['link'] = strip_tags($new_instance['link']);
 		return $instance;
@@ -212,6 +213,7 @@ class null_instagram_widget extends WP_Widget {
 					$image['link']                          = preg_replace( "/^http:/i", "", $image['link'] );
 					$image['images']['thumbnail']           = preg_replace( "/^http:/i", "", $image['images']['thumbnail'] );
 					$image['images']['standard_resolution'] = preg_replace( "/^http:/i", "", $image['images']['standard_resolution'] );
+					$image['images']['low_resolution']      = preg_replace( "/^http:/i", "", $image['images']['low_resolution'] );
 
 					$instagram[] = array(
 						'description'   => $image['caption']['text'],
@@ -221,6 +223,7 @@ class null_instagram_widget extends WP_Widget {
 						'likes'         => $image['likes']['count'],
 						'thumbnail'     => $image['images']['thumbnail'],
 						'large'         => $image['images']['standard_resolution'],
+						'small'         => $image['images']['low_resolution'],
 						'type'          => $image['type']
 					);
 				}
@@ -243,4 +246,3 @@ class null_instagram_widget extends WP_Widget {
 		return false;
 	}
 }
-?>
