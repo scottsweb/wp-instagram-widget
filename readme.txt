@@ -40,12 +40,13 @@ To use within the [null theme framework](https://github.com/scottsweb/null) or [
 
 The plugin has two filters. The first allows you adjust that cache time for retrieving the images from Instagram:
 
-`add_filter('null_instagram_cache_time', 'my_cache_time');
+```php
+add_filter('null_instagram_cache_time', 'my_cache_time');
 
 function my_cache_time() {
 	return HOUR_IN_SECONDS;
 }
-`
+```
 
 The second allows you to filter video results from the widget:
 
