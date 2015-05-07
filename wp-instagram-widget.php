@@ -114,7 +114,7 @@ class null_instagram_widget extends WP_Widget {
 
 			if ( is_wp_error($media_array) ) {
 
-			   echo $media_array->get_error_message();
+				echo $media_array->get_error_message();
 
 			} else {
 
@@ -122,7 +122,7 @@ class null_instagram_widget extends WP_Widget {
 				if ( $images_only = apply_filters( 'wpiw_images_only', FALSE ) )
 					$media_array = array_filter( $media_array, array( $this, 'images_only' ) );
 
-				?><ul class="instagram-pics"><?php
+				?><ul class="instagram-pics instagram-size-<?php echo esc_attr( $instance['size'] ); ?>"><?php
 				foreach ($media_array as $item) {
 					echo '<li><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"><img src="'. esc_url($item[$size]['url']) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"/></a></li>';
 				}
