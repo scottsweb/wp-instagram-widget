@@ -128,8 +128,13 @@ class null_instagram_widget extends WP_Widget {
 				$imgclass = esc_attr( apply_filters( 'wpiw_img_class', '' ) );
 
 				?><ul class="instagram-pics instagram-size-<?php echo esc_attr( $instance['size'] ); ?>"><?php
-				foreach ($media_array as $item) {
-					echo '<li class="'. $liclass .'"><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"  class="'. $aclass .'"><img src="'. esc_url($item[$size]['url']) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"  class="'. $imgclass .'"/></a></li>';
+				foreach ( $media_array as $item ) {
+					// copy the else line into a new file (parts/wp-instagram-widget.php) within your theme and customise accordingly
+					if ( locate_template( 'parts/wp-instagram-widget.php' ) != '' ) {
+						include( locate_template( 'parts/wp-instagram-widget.php' ) );
+					} else {
+						echo '<li class="'. $liclass .'"><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"  class="'. $aclass .'"><img src="'. esc_url($item[$size]['url']) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"  class="'. $imgclass .'"/></a></li>';
+					}
 				}
 				?></ul><?php
 			}

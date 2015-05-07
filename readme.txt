@@ -69,6 +69,8 @@ In version 1.3 you also have two new hooks for adding custom output before and a
 `wpiw_before_widget`
 `wpiw_after_widget`
 
+In version 1.4 and above you can also customise the image loop completely by creating a `parts/wp-instagram-widget.php` file in your theme.
+
 == Screenshots ==
 
 1. Instagram widget on the front end
@@ -79,7 +81,8 @@ In version 1.3 you also have two new hooks for adding custom output before and a
 = 1.4 (in progress) =
 * Remove null framework support
 * Introduce class filters
-* Do not set a transient if no images are returned
+* Only set a transient if images are returned
+* Optional template part for complete output control
 
 = 1.3.1 =
 * Force lowercase usernames
