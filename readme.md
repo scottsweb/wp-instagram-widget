@@ -77,7 +77,7 @@ In version 1.4 and above you can also customise the image loop completely by cre
 
 ## Changelog
 
-####1.4 (in progress)
+####1.4
 * Remove null framework support
 * Introduce class filters
 * Only set a transient if images are returned

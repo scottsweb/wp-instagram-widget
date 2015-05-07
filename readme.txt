@@ -2,7 +2,7 @@
 Contributors: scottsweb, codeforthepeople
 Tags: instagram, widget, photos, photography, hipster, sidebar, widgets, simple
 Requires at least: 3.0
-Tested up to: 4.0
+Tested up to: 4.2.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -78,7 +78,7 @@ In version 1.4 and above you can also customise the image loop completely by cre
 
 == Changelog ==
 
-= 1.4 (in progress) =
+= 1.4 =
 * Remove null framework support
 * Introduce class filters
 * Only set a transient if images are returned
