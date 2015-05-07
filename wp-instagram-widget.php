@@ -124,7 +124,7 @@ class null_instagram_widget extends WP_Widget {
 
 				?><ul class="instagram-pics instagram-size-<?php echo esc_attr( $instance['size'] ); ?>"><?php
 				foreach ($media_array as $item) {
-					echo '<li><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"><img src="'. esc_url($item[$size]['url']) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"/></a></li>';
+					echo '<li><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"><img src="'. esc_url($item[$size]['url']) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'" width="'. esc_attr( $item[$size]['width'] ) .'" height="'. esc_attr( $item[$size]['height'] ) .'" /></a></li>';
 				}
 				?></ul><?php
 			}
