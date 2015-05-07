@@ -234,8 +234,11 @@ class null_instagram_widget extends WP_Widget {
 				}
 			}
 
-			$instagram = base64_encode( serialize( $instagram ) );
-			set_transient('instagram-media-'.sanitize_title_with_dashes($username), $instagram, apply_filters('null_instagram_cache_time', HOUR_IN_SECONDS*2));
+			// do not set an empty transient - should help catch private or empty accounts
+			if ( ! empty( $instagram ) ) {
+				$instagram = base64_encode( serialize( $instagram ) );
+				set_transient('instagram-media-'.sanitize_title_with_dashes($username), $instagram, apply_filters('null_instagram_cache_time', HOUR_IN_SECONDS*2));
+			}
 		}
 
 		$instagram = unserialize( base64_decode( $instagram ) );

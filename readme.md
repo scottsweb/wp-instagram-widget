@@ -78,6 +78,7 @@ wpiw_after_widget
 ####1.4 (in progress)
 * Remove null framework support
 * Introduce class filters
+* Do not set a transient if no images are returned
 
 ####1.3.1
 * Force lowercase usernames

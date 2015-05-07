@@ -79,6 +79,7 @@ In version 1.3 you also have two new hooks for adding custom output before and a
 = 1.4 (in progress) =
 * Remove null framework support
 * Introduce class filters
+* Do not set a transient if no images are returned
 
 = 1.3.1 =
 * Force lowercase usernames
