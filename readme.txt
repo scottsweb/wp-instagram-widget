@@ -39,7 +39,7 @@ To use within the [null theme framework](https://github.com/scottsweb/null) or [
 
 = Hooks & Filters =
 
-The plugin has two filters. The first allows you adjust that cache time for retrieving the images from Instagram:
+The plugin has five filters. The first allows you adjust that cache time for retrieving the images from Instagram:
 
 `add_filter('null_instagram_cache_time', 'my_cache_time');
 
@@ -51,6 +51,18 @@ function my_cache_time() {
 The second allows you to filter video results from the widget:
 
 `add_filter('wpiw_images_only', '__return_true');`
+
+The rest allow you to add custom classes to each list item, link or image:
+
+`add_filter( 'wpiw_item_class', 'my_instagram_class' );
+add_filter( 'wpiw_a_class', 'my_instagram_class' );
+add_filter( 'wpiw_img_class', 'my_instagram_class' );
+
+function my_instagram_class( $classes ) {
+	$classes = "instagram-image";
+	return $classes;
+}
+`
 
 In version 1.3 you also have two new hooks for adding custom output before and after the widget:
 
@@ -66,7 +78,7 @@ In version 1.3 you also have two new hooks for adding custom output before and a
 
 = 1.4 (in progress) =
 * Remove null framework support
-* Introduce class filter `wpiw_item_class`
+* Introduce class filters
 
 = 1.3.1 =
 * Force lowercase usernames

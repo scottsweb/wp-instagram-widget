@@ -122,9 +122,14 @@ class null_instagram_widget extends WP_Widget {
 				if ( $images_only = apply_filters( 'wpiw_images_only', FALSE ) )
 					$media_array = array_filter( $media_array, array( $this, 'images_only' ) );
 
+				// filters for custom classes
+				$liclass = esc_attr( apply_filters( 'wpiw_item_class', '' ) );
+				$aclass = esc_attr( apply_filters( 'wpiw_a_class', '' ) );
+				$imgclass = esc_attr( apply_filters( 'wpiw_img_class', '' ) );
+
 				?><ul class="instagram-pics instagram-size-<?php echo esc_attr( $instance['size'] ); ?>"><?php
 				foreach ($media_array as $item) {
-					echo '<li><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"><img src="'. esc_url($item[$size]['url']) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"/></a></li>';
+					echo '<li class="'. $liclass .'"><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"  class="'. $aclass .'"><img src="'. esc_url($item[$size]['url']) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"  class="'. $imgclass .'"/></a></li>';
 				}
 				?></ul><?php
 			}
