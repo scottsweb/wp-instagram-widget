@@ -19,7 +19,8 @@ The widget is built with the following philosophy:
 * Provide no styles/css - it is up to you to style the widget to your theme and taste
 * Cache where possible - filters are provided to adjust cache timings
 * Require little setup - avoid oAuth for example
-* Work standalone and as a drop in to the [null theme framework](https://github.com/scottsweb/null)
+
+[a plugin by Scott Evans](http://scott.ee/ "WordPress designer and developer")
 
 == Installation ==
 
@@ -62,6 +63,10 @@ In version 1.3 you also have two new hooks for adding custom output before and a
 2. Instagram widget in the theme customiser
 
 == Changelog ==
+
+= 1.4 (in progress) =
+* Remove null framework support
+* Introduce class filter `wpiw_item_class`
 
 = 1.3.1 =
 * Force lowercase usernames

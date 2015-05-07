@@ -51,14 +51,20 @@ add_filter('wpiw_images_only', '__return_true');
 
 In version 1.3 you also have two new hooks for adding custom output before and after the widget:
 
-`wpiw_before_widget`
-`wpiw_after_widget`
+```
+wpiw_before_widget
+wpiw_after_widget
+```
 
 ## Frequently Asked Questions
 
 ...
 
 ## Changelog
+
+####1.4 (in progress)
+* Remove null framework support
+* Introduce class filter `wpiw_item_class`
 
 ####1.3.1
 * Force lowercase usernames
