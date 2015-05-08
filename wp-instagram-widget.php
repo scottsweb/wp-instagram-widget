@@ -1,37 +1,17 @@
 <?php
 /*
 Plugin Name: WP Instagram Widget
-Plugin URI: https://github.com/cftp/wp-instagram-widget
+Plugin URI: https://github.com/scottsweb/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos
-Version: 1.4
-Author: Scott Evans (Code For The People)
-Author URI: http://codeforthepeople.com
+Version: 1.4.1
+Author: Scott Evans
+Author URI: http://scott.ee
 Text Domain: wpiw
 Domain Path: /assets/languages/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This comment is added for compatibility with the null framework https://github.com/scottsweb/null
-Widget Name: Instagram Widget
-
-Copyright © 2013 Code for the People ltd
-
-                _____________
-               /      ____   \
-         _____/       \   \   \
-        /\    \        \___\   \
-       /  \    \                \
-      /   /    /          _______\
-     /   /    /          \       /
-    /   /    /            \     /
-    \   \    \ _____    ___\   /
-     \   \    /\    \  /       \
-      \   \  /  \____\/    _____\
-       \   \/        /    /    / \
-        \           /____/    /___\
-         \                        /
-          \______________________/
-
+Copyright © 2013 Scott Evans
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

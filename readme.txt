@@ -78,8 +78,9 @@ In version 1.4 and above you can also customise the image loop completely by cre
 
 == Changelog ==
 
-= 1.4.1 (in progress) = 
+= 1.4.1 (in progress) =
 * Remove null framework support
+* Update plugin header
 
 = 1.4 =
 * Introduce class filters
