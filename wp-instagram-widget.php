@@ -2,7 +2,7 @@
 /*
 Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/scottsweb/wp-instagram-widget
-Description: A WordPress widget for showing your latest Instagram photos
+Description: A WordPress widget for showing your latest Instagram photos.
 Version: 1.4.1
 Author: Scott Evans
 Author URI: http://scott.ee
