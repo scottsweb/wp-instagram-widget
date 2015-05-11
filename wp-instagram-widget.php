@@ -226,9 +226,16 @@ class null_instagram_widget extends WP_Widget {
 			}
 		}
 
-		$instagram = unserialize( base64_decode( $instagram ) );
+		if ( ! empty( $instagram ) ) {
 
-		return array_slice($instagram, 0, $slice);
+			$instagram = unserialize( base64_decode( $instagram ) );
+			return array_slice($instagram, 0, $slice);
+
+		} else {
+
+			return new WP_Error('no_images', __('Instagram did not return any images.', $this->wpiwdomain));
+
+		}
 	}
 
 	function images_only($media_item) {
