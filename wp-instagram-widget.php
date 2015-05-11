@@ -121,7 +121,7 @@ class null_instagram_widget extends WP_Widget {
 		}
 
 		if ($link != '') {
-			?><p class="clear"><a href="//instagram.com/<?php echo trim($username); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo $link; ?></a></p><?php
+			?><p class="clear"><a href="//instagram.com/<?php echo esc_attr( trim($username) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo $link; ?></a></p><?php
 		}
 
 		do_action( 'wpiw_after_widget', $instance );
