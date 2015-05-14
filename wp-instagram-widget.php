@@ -25,21 +25,7 @@ GNU General Public License for more details.
 
 */
 
-// load is_plugin_active function if required
-if (!function_exists('is_plugin_inactive')) require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
-
-// registers widget when bundled with the null framework
-if (is_plugin_inactive('wp-instagram-widget/wordpress-instagram-widget.php') && function_exists('null_get_extensions')) {
-
-	// register
-	register_widget('null_instagram_widget');
-
-	// text domain
-	$wpiwdomain = 'null';
-}
-
-// register widget for standalone
-if (is_plugin_active('wp-instagram-widget/wp-instagram-widget.php')) {
+function wpiw_init() {
 
 	// define some constants
 	define('WP_INSTAGRAM_WIDGET_JS_URL',plugins_url('/assets/js',__FILE__));
@@ -49,27 +35,21 @@ if (is_plugin_active('wp-instagram-widget/wp-instagram-widget.php')) {
 	define('WP_INSTAGRAM_WIDGET_BASE', plugin_basename(__FILE__));
 	define('WP_INSTAGRAM_WIDGET_FILE', __FILE__);
 
-	// text domain
-	$wpiwdomain = 'wpiw';
-
 	// load language files
-	load_plugin_textdomain($wpiwdomain, false, dirname(WP_INSTAGRAM_WIDGET_BASE) . '/assets/languages/');
-
-	// register
-	add_action('widgets_init', 'wpiw_widget');
+	load_plugin_textdomain( 'wpiw', false, dirname(WP_INSTAGRAM_WIDGET_BASE) . '/assets/languages/' );
 }
+add_action('init', 'wpiw_init');
 
 function wpiw_widget() {
 	register_widget('null_instagram_widget');
 }
+add_action('widgets_init', 'wpiw_widget');
 
 class null_instagram_widget extends WP_Widget {
 
 	function null_instagram_widget() {
-		global $wpiwdomain;
-		$this->wpiwdomain = $wpiwdomain;
-		$widget_ops = array('classname' => 'null-instagram-feed', 'description' => __('Displays your latest Instagram photos', $this->wpiwdomain) );
-		$this->WP_Widget('null-instagram-feed', __('Instagram', $this->wpiwdomain), $widget_ops);
+		$widget_ops = array('classname' => 'null-instagram-feed', 'description' => __('Displays your latest Instagram photos', 'wpiw') );
+		$this->WP_Widget('null-instagram-feed', __('Instagram', 'wpiw'), $widget_ops);
 	}
 
 	function widget($args, $instance) {
@@ -130,7 +110,7 @@ class null_instagram_widget extends WP_Widget {
 	}
 
 	function form($instance) {
-		$instance = wp_parse_args( (array) $instance, array( 'title' => __('Instagram', $this->wpiwdomain), 'username' => '', 'link' => __('Follow Us', $this->wpiwdomain), 'number' => 9, 'size' => 'thumbnail', 'target' => '_self') );
+		$instance = wp_parse_args( (array) $instance, array( 'title' => __('Instagram', 'wpiw'), 'username' => '', 'link' => __('Follow Us', 'wpiw'), 'number' => 9, 'size' => 'thumbnail', 'target' => '_self') );
 		$title = esc_attr($instance['title']);
 		$username = esc_attr($instance['username']);
 		$number = absint($instance['number']);
@@ -138,23 +118,23 @@ class null_instagram_widget extends WP_Widget {
 		$target = esc_attr($instance['target']);
 		$link = esc_attr($instance['link']);
 		?>
-		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', $this->wpiwdomain); ?>: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id('username'); ?>"><?php _e('Username', $this->wpiwdomain); ?>: <input class="widefat" id="<?php echo $this->get_field_id('username'); ?>" name="<?php echo $this->get_field_name('username'); ?>" type="text" value="<?php echo $username; ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of photos', $this->wpiwdomain); ?>: <input class="widefat" id="<?php echo $this->get_field_id('number'); ?>" name="<?php echo $this->get_field_name('number'); ?>" type="text" value="<?php echo $number; ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id('size'); ?>"><?php _e('Photo size', $this->wpiwdomain); ?>:</label>
+		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title', 'wpiw'); ?>: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id('username'); ?>"><?php _e('Username', 'wpiw'); ?>: <input class="widefat" id="<?php echo $this->get_field_id('username'); ?>" name="<?php echo $this->get_field_name('username'); ?>" type="text" value="<?php echo $username; ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id('number'); ?>"><?php _e('Number of photos', 'wpiw'); ?>: <input class="widefat" id="<?php echo $this->get_field_id('number'); ?>" name="<?php echo $this->get_field_name('number'); ?>" type="text" value="<?php echo $number; ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id('size'); ?>"><?php _e('Photo size', 'wpiw'); ?>:</label>
 			<select id="<?php echo $this->get_field_id('size'); ?>" name="<?php echo $this->get_field_name('size'); ?>" class="widefat">
-				<option value="thumbnail" <?php selected('thumbnail', $size) ?>><?php _e('Thumbnail', $this->wpiwdomain); ?></option>
-				<option value="small" <?php selected('small', $size) ?>><?php _e('Small', $this->wpiwdomain); ?></option>
-				<option value="large" <?php selected('large', $size) ?>><?php _e('Large', $this->wpiwdomain); ?></option>
+				<option value="thumbnail" <?php selected('thumbnail', $size) ?>><?php _e('Thumbnail', 'wpiw'); ?></option>
+				<option value="small" <?php selected('small', $size) ?>><?php _e('Small', 'wpiw'); ?></option>
+				<option value="large" <?php selected('large', $size) ?>><?php _e('Large', 'wpiw'); ?></option>
 			</select>
 		</p>
-		<p><label for="<?php echo $this->get_field_id('target'); ?>"><?php _e('Open links in', $this->wpiwdomain); ?>:</label>
+		<p><label for="<?php echo $this->get_field_id('target'); ?>"><?php _e('Open links in', 'wpiw'); ?>:</label>
 			<select id="<?php echo $this->get_field_id('target'); ?>" name="<?php echo $this->get_field_name('target'); ?>" class="widefat">
-				<option value="_self" <?php selected('_self', $target) ?>><?php _e('Current window (_self)', $this->wpiwdomain); ?></option>
-				<option value="_blank" <?php selected('_blank', $target) ?>><?php _e('New window (_blank)', $this->wpiwdomain); ?></option>
+				<option value="_self" <?php selected('_self', $target) ?>><?php _e('Current window (_self)', 'wpiw'); ?></option>
+				<option value="_blank" <?php selected('_blank', $target) ?>><?php _e('New window (_blank)', 'wpiw'); ?></option>
 			</select>
 		</p>
-		<p><label for="<?php echo $this->get_field_id('link'); ?>"><?php _e('Link text', $this->wpiwdomain); ?>: <input class="widefat" id="<?php echo $this->get_field_id('link'); ?>" name="<?php echo $this->get_field_name('link'); ?>" type="text" value="<?php echo $link; ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id('link'); ?>"><?php _e('Link text', 'wpiw'); ?>: <input class="widefat" id="<?php echo $this->get_field_id('link'); ?>" name="<?php echo $this->get_field_name('link'); ?>" type="text" value="<?php echo $link; ?>" /></label></p>
 		<?php
 
 	}
@@ -180,17 +160,17 @@ class null_instagram_widget extends WP_Widget {
 			$remote = wp_remote_get('http://instagram.com/'.trim($username));
 
 			if (is_wp_error($remote))
-	  			return new WP_Error('site_down', __('Unable to communicate with Instagram.', $this->wpiwdomain));
+	  			return new WP_Error('site_down', __('Unable to communicate with Instagram.', 'wpiw'));
 
   			if ( 200 != wp_remote_retrieve_response_code( $remote ) )
-  				return new WP_Error('invalid_response', __('Instagram did not return a 200.', $this->wpiwdomain));
+  				return new WP_Error('invalid_response', __('Instagram did not return a 200.', 'wpiw'));
 
 			$shards = explode('window._sharedData = ', $remote['body']);
 			$insta_json = explode(';</script>', $shards[1]);
 			$insta_array = json_decode($insta_json[0], TRUE);
 
 			if (!$insta_array)
-	  			return new WP_Error('bad_json', __('Instagram has returned invalid data.', $this->wpiwdomain));
+	  			return new WP_Error('bad_json', __('Instagram has returned invalid data.', 'wpiw'));
 
 			$images = $insta_array['entry_data']['UserProfile'][0]['userMedia'];
 
@@ -233,7 +213,7 @@ class null_instagram_widget extends WP_Widget {
 
 		} else {
 
-			return new WP_Error('no_images', __('Instagram did not return any images.', $this->wpiwdomain));
+			return new WP_Error('no_images', __('Instagram did not return any images.', 'wpiw'));
 
 		}
 	}
