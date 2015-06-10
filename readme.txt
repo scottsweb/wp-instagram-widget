@@ -78,9 +78,10 @@ In version 1.4 and above you can also customise the image loop completely by cre
 
 == Changelog ==
 
-= 1.4.1 (in progress) =
+= 1.5 =
 * Remove null framework support
-* Update plugin header
+* Fix breaking change by Instagram whilst maintaining old style support
+* Remove thumbnail size option
 
 = 1.4 =
 * Introduce class filters
