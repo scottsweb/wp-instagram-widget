@@ -171,7 +171,7 @@ class null_instagram_widget extends WP_Widget {
 				$images = $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'];
 				$type = 'new';
 			} else {
-				return new WP_Error( 'bad_josn_2', __( 'Instagram has returned invalid data.', 'wpiw' ) );
+				return new WP_Error( 'bad_json_2', __( 'Instagram has returned invalid data.', 'wpiw' ) );
 			}
 
 			if ( !is_array( $images ) )
