@@ -47,9 +47,12 @@ add_action( 'widgets_init', 'wpiw_widget' );
 
 class null_instagram_widget extends WP_Widget {
 
-	function null_instagram_widget() {
-		$widget_ops = array( 'classname' => 'null-instagram-feed', 'description' => __( 'Displays your latest Instagram photos', 'wpiw' ) );
-		$this->WP_Widget( 'null-instagram-feed', __( 'Instagram', 'wpiw' ), $widget_ops );
+	function __construct() {
+		parent::__construct(
+			'null-instagram-feed',
+			__( 'Instagram', 'wpiw' ),
+			array( 'classname' => 'null-instagram-feed', 'description' => __( 'Displays your latest Instagram photos', 'wpiw' ) )
+		);
 	}
 
 	function widget( $args, $instance ) {
