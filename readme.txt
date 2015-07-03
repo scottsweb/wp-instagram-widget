@@ -30,10 +30,7 @@ To install this plugin:
 1. Activate the plugin through the 'Plugins' menu in WordPress
 1. That's it!
 
-To use within the [null theme framework](https://github.com/scottsweb/null) or [null child theme](https://github.com/scottsweb/null-child)
-
-1. Drop the wp-instagram-widget.php file into your /assets/inc/widgets/ folder
-1. Activate via 'Appearance' -> 'Theme Options' menu, under the 'WordPress' tab
+Alternatively you can search for the plugin from your WordPress dashboard and install from there.
 
 == Frequently Asked Questions ==
 
