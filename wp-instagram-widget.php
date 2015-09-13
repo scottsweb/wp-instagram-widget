@@ -218,8 +218,13 @@ class null_instagram_widget extends WP_Widget {
 							$type = 'image';
 						}
 
+						$caption = __( 'Instagram Image', 'wpiw' );
+						if (!empty( $image['caption'] )) {
+							$caption = $image['caption'];
+						}
+
 						$instagram[] = array(
-							'description'   => __( 'Instagram Image', 'wpiw' ),
+							'description'   => $caption,
 							'link'		  	=> '//instagram.com/p/' . $image['code'],
 							'time'		  	=> $image['date'],
 							'comments'	  	=> $image['comments']['count'],
