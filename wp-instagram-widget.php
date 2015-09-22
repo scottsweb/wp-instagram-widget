@@ -147,6 +147,7 @@ class null_instagram_widget extends WP_Widget {
 	function scrape_instagram( $username, $slice = 9 ) {
 
 		$username = strtolower( $username );
+		$username = str_replace( '@', '', $username );
 
 		if ( false === ( $instagram = get_transient( 'instagram-media-new-'.sanitize_title_with_dashes( $username ) ) ) ) {
 
