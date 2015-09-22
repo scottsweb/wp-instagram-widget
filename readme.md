@@ -79,6 +79,11 @@ In version 1.4 and above you can also customise the image loop completely by cre
 
 ## Changelog
 
+####1.7
+* Bring back image sizes
+* Use thumbnails that are square (originals are in the data returned and can be used)
+* Remove @ from usernames
+
 ####1.6
 * Compatibility with 4.3
 

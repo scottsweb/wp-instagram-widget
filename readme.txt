@@ -2,7 +2,7 @@
 Contributors: scottsweb, codeforthepeople
 Tags: instagram, widget, photos, photography, hipster, sidebar, widgets, simple
 Requires at least: 3.0
-Tested up to: 4.3
+Tested up to: 4.4
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -74,6 +74,11 @@ In version 1.4 and above you can also customise the image loop completely by cre
 2. Instagram widget in the theme customiser
 
 == Changelog ==
+
+= 1.7 =
+* Bring back image sizes
+* Use thumbnails that are square (originals are in the data returned and can be used)
+* Remove @ from usernames
 
 = 1.6 =
 * Compatibility with 4.3
