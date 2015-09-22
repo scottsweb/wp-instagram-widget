@@ -149,7 +149,7 @@ class null_instagram_widget extends WP_Widget {
 		$username = strtolower( $username );
 		$username = str_replace( '@', '', $username );
 
-		if ( false === ( $instagram = get_transient( 'instagram-media-new-'.sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( 'instagram-media-3-'.sanitize_title_with_dashes( $username ) ) ) ) {
 
 			$remote = wp_remote_get( 'http://instagram.com/'.trim( $username ) );
 
@@ -166,14 +166,8 @@ class null_instagram_widget extends WP_Widget {
 			if ( !$insta_array )
 				return new WP_Error( 'bad_json', __( 'Instagram has returned invalid data.', 'wpiw' ) );
 
-			// old style
-			if ( isset( $insta_array['entry_data']['UserProfile'][0]['userMedia'] ) ) {
-				$images = $insta_array['entry_data']['UserProfile'][0]['userMedia'];
-				$type = 'old';
-			// new style
-			} else if ( isset( $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'] ) ) {
+			if ( isset( $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'] ) ) {
 				$images = $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'];
-				$type = 'new';
 			} else {
 				return new WP_Error( 'bad_json_2', __( 'Instagram has returned invalid data.', 'wpiw' ) );
 			}
@@ -183,59 +177,33 @@ class null_instagram_widget extends WP_Widget {
 
 			$instagram = array();
 
-			switch ( $type ) {
-				case 'old':
-					foreach ( $images as $image ) {
+			foreach ( $images as $image ) {
 
-						if ( $image['user']['username'] == $username ) {
+				$image['thumbnail_src'] = preg_replace( "/^http:/i", "", $image['thumbnail_src'] );
+				$image['display_src'] = preg_replace( "/^http:/i", "", $image['display_src'] );
 
-							$image['link']						  = preg_replace( "/^http:/i", "", $image['link'] );
-							$image['images']['thumbnail']		   = preg_replace( "/^http:/i", "", $image['images']['thumbnail'] );
-							$image['images']['standard_resolution'] = preg_replace( "/^http:/i", "", $image['images']['standard_resolution'] );
-							$image['images']['low_resolution']	  = preg_replace( "/^http:/i", "", $image['images']['low_resolution'] );
+				if ( $image['is_video'] == true ) {
+					$type = 'video';
+				} else {
+					$type = 'image';
+				}
 
-							$instagram[] = array(
-								'description'   => $image['caption']['text'],
-								'link'		  	=> $image['link'],
-								'time'		  	=> $image['created_time'],
-								'comments'	  	=> $image['comments']['count'],
-								'likes'		 	=> $image['likes']['count'],
-								'thumbnail'	 	=> $image['images']['thumbnail'],
-								'large'		 	=> $image['images']['standard_resolution'],
-								'small'		 	=> $image['images']['low_resolution'],
-								'type'		  	=> $image['type']
-							);
-						}
-					}
-				break;
-				default:
-					foreach ( $images as $image ) {
-
-						$image['display_src'] = preg_replace( "/^http:/i", "", $image['display_src'] );
-
-						if ( $image['is_video']  == true ) {
-							$type = 'video';
-						} else {
-							$type = 'image';
-						}
-
-						$instagram[] = array(
-							'description'   => __( 'Instagram Image', 'wpiw' ),
-							'link'		  	=> '//instagram.com/p/' . $image['code'],
-							'time'		  	=> $image['date'],
-							'comments'	  	=> $image['comments']['count'],
-							'likes'		 	=> $image['likes']['count'],
-							'thumbnail'	 	=> $image['display_src'],
-							'type'		  	=> $type
-						);
-					}
-				break;
+				$instagram[] = array(
+					'description'   => __( 'Instagram Image', 'wpiw' ),
+					'link'		  	=> '//instagram.com/p/' . $image['code'],
+					'time'		  	=> $image['date'],
+					'comments'	  	=> $image['comments']['count'],
+					'likes'		 	=> $image['likes']['count'],
+					'thumbnail'	 	=> $image['thumbnail_src'],
+					'original'		=> $image['display_src'],
+					'type'		  	=> $type
+				);
 			}
 
 			// do not set an empty transient - should help catch private or empty accounts
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'instagram-media-new-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
+				set_transient( 'instagram-media-3-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
 			}
 		}
 
