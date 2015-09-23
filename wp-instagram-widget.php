@@ -129,6 +129,7 @@ class null_instagram_widget extends WP_Widget {
 				<option value="thumbnail" <?php selected( 'thumbnail', $size ) ?>><?php _e( 'Thumbnail', 'wpiw' ); ?></option>
 				<option value="small" <?php selected( 'small', $size ) ?>><?php _e( 'Small', 'wpiw' ); ?></option>
 				<option value="large" <?php selected( 'large', $size ) ?>><?php _e( 'Large', 'wpiw' ); ?></option>
+				<option value="original" <?php selected( 'original', $size ) ?>><?php _e( 'Original', 'wpiw' ); ?></option>
 			</select>
 		</p>
 		<p><label for="<?php echo $this->get_field_id( 'target' ); ?>"><?php _e( 'Open links in', 'wpiw' ); ?>:</label>
@@ -147,7 +148,7 @@ class null_instagram_widget extends WP_Widget {
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['username'] = trim( strip_tags( $new_instance['username'] ) );
 		$instance['number'] = ! absint( $new_instance['number'] ) ? 9 : $new_instance['number'];
-		$instance['size'] = ( ( $new_instance['size'] == 'thumbnail' || $new_instance['size'] == 'large' || $new_instance['size'] == 'small' ) ? $new_instance['size'] : 'thumbnail' );
+		$instance['size'] = ( ( $new_instance['size'] == 'thumbnail' || $new_instance['size'] == 'large' || $new_instance['size'] == 'small' || $new_instance['size'] == 'original' ) ? $new_instance['size'] : 'large' );
 		$instance['target'] = ( ( $new_instance['target'] == '_self' || $new_instance['target'] == '_blank' ) ? $new_instance['target'] : '_self' );
 		$instance['link'] = strip_tags( $new_instance['link'] );
 		return $instance;
