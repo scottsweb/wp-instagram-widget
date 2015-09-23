@@ -86,11 +86,12 @@ class null_instagram_widget extends WP_Widget {
 					$media_array = array_filter( $media_array, array( $this, 'images_only' ) );
 
 				// filters for custom classes
+				$ulclass = esc_attr( apply_filters( 'wpiw_list_class', 'instagram-pics instagram-size-' . $size ) );
 				$liclass = esc_attr( apply_filters( 'wpiw_item_class', '' ) );
 				$aclass = esc_attr( apply_filters( 'wpiw_a_class', '' ) );
 				$imgclass = esc_attr( apply_filters( 'wpiw_img_class', '' ) );
 
-				?><ul class="instagram-pics instagram-size-<?php echo esc_attr( $size ); ?>"><?php
+				?><ul class="<?php echo esc_attr( $ulclass ); ?>"><?php
 				foreach ( $media_array as $item ) {
 					// copy the else line into a new file (parts/wp-instagram-widget.php) within your theme and customise accordingly
 					if ( locate_template( 'parts/wp-instagram-widget.php' ) != '' ) {
