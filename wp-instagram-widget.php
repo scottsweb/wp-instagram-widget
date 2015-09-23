@@ -67,7 +67,7 @@ class null_instagram_widget extends WP_Widget {
 		$link = empty( $instance['link'] ) ? '' : $instance['link'];
 
 		echo $before_widget;
-		if ( !empty( $title ) ) { echo $before_title . $title . $after_title; };
+		if ( ! empty( $title ) ) { echo $before_title . $title . $after_title; };
 
 		do_action( 'wpiw_before_widget', $instance );
 
@@ -146,7 +146,7 @@ class null_instagram_widget extends WP_Widget {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['username'] = trim( strip_tags( $new_instance['username'] ) );
-		$instance['number'] = !absint( $new_instance['number'] ) ? 9 : $new_instance['number'];
+		$instance['number'] = ! absint( $new_instance['number'] ) ? 9 : $new_instance['number'];
 		$instance['size'] = ( ( $new_instance['size'] == 'thumbnail' || $new_instance['size'] == 'large' || $new_instance['size'] == 'small' ) ? $new_instance['size'] : 'thumbnail' );
 		$instance['target'] = ( ( $new_instance['target'] == '_self' || $new_instance['target'] == '_blank' ) ? $new_instance['target'] : '_self' );
 		$instance['link'] = strip_tags( $new_instance['link'] );
@@ -159,7 +159,7 @@ class null_instagram_widget extends WP_Widget {
 		$username = strtolower( $username );
 		$username = str_replace( '@', '', $username );
 
-		if ( false === ( $instagram = get_transient( 'instagram-media-4-'.sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( 'instagram-media-5-'.sanitize_title_with_dashes( $username ) ) ) ) {
 
 			$remote = wp_remote_get( 'http://instagram.com/'.trim( $username ) );
 
@@ -173,7 +173,7 @@ class null_instagram_widget extends WP_Widget {
 			$insta_json = explode( ';</script>', $shards[1] );
 			$insta_array = json_decode( $insta_json[0], TRUE );
 
-			if ( !$insta_array )
+			if ( ! $insta_array )
 				return new WP_Error( 'bad_json', __( 'Instagram has returned invalid data.', 'wpiw' ) );
 
 			if ( isset( $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'] ) ) {
@@ -182,7 +182,7 @@ class null_instagram_widget extends WP_Widget {
 				return new WP_Error( 'bad_json_2', __( 'Instagram has returned invalid data.', 'wpiw' ) );
 			}
 
-			if ( !is_array( $images ) )
+			if ( ! is_array( $images ) )
 				return new WP_Error( 'bad_array', __( 'Instagram has returned invalid data.', 'wpiw' ) );
 
 			$instagram = array();
@@ -201,8 +201,13 @@ class null_instagram_widget extends WP_Widget {
 					$type = 'image';
 				}
 
+				$caption = __( 'Instagram Image', 'wpiw' );
+				if ( ! empty( $image['caption'] ) ) {
+					$caption = $image['caption'];
+				}
+
 				$instagram[] = array(
-					'description'   => __( 'Instagram Image', 'wpiw' ),
+					'description'   => $caption,
 					'link'		  	=> '//instagram.com/p/' . $image['code'],
 					'time'		  	=> $image['date'],
 					'comments'	  	=> $image['comments']['count'],
@@ -218,7 +223,7 @@ class null_instagram_widget extends WP_Widget {
 			// do not set an empty transient - should help catch private or empty accounts
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'instagram-media-4-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
+				set_transient( 'instagram-media-5-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
 			}
 		}
 
