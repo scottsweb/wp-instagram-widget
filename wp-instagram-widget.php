@@ -6,7 +6,7 @@ Description: A WordPress widget for showing your latest Instagram photos.
 Version: 1.8
 Author: Scott Evans
 Author URI: http://scott.ee
-Text Domain: wpiw
+Text Domain: wp-instagram-widget
 Domain Path: /assets/languages/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -36,7 +36,7 @@ function wpiw_init() {
 	define( 'WP_INSTAGRAM_WIDGET_FILE', __FILE__ );
 
 	// load language files
-	load_plugin_textdomain( 'wpiw', false, dirname( WP_INSTAGRAM_WIDGET_BASE ) . '/assets/languages/' );
+	load_plugin_textdomain( 'wp-instagram-widget', false, dirname( WP_INSTAGRAM_WIDGET_BASE ) . '/assets/languages/' );
 }
 add_action( 'init', 'wpiw_init' );
 
@@ -50,8 +50,8 @@ class null_instagram_widget extends WP_Widget {
 	function __construct() {
 		parent::__construct(
 			'null-instagram-feed',
-			__( 'Instagram', 'wpiw' ),
-			array( 'classname' => 'null-instagram-feed', 'description' => __( 'Displays your latest Instagram photos', 'wpiw' ) )
+			__( 'Instagram', 'wp-instagram-widget' ),
+			array( 'classname' => 'null-instagram-feed', 'description' => __( 'Displays your latest Instagram photos', 'wp-instagram-widget' ) )
 		);
 	}
 
@@ -114,7 +114,7 @@ class null_instagram_widget extends WP_Widget {
 	}
 
 	function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array( 'title' => __( 'Instagram', 'wpiw' ), 'username' => '', 'size' => 'large', 'link' => __( 'Follow Us', 'wpiw' ), 'number' => 9, 'target' => '_self' ) );
+		$instance = wp_parse_args( (array) $instance, array( 'title' => __( 'Instagram', 'wp-instagram-widget' ), 'username' => '', 'size' => 'large', 'link' => __( 'Follow Me!', 'wp-instagram-widget' ), 'number' => 9, 'target' => '_self' ) );
 		$title = esc_attr( $instance['title'] );
 		$username = esc_attr( $instance['username'] );
 		$number = absint( $instance['number'] );
@@ -122,24 +122,24 @@ class null_instagram_widget extends WP_Widget {
 		$target = esc_attr( $instance['target'] );
 		$link = esc_attr( $instance['link'] );
 		?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'wpiw' ); ?>: <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id( 'username' ); ?>"><?php _e( 'Username', 'wpiw' ); ?>: <input class="widefat" id="<?php echo $this->get_field_id( 'username' ); ?>" name="<?php echo $this->get_field_name( 'username' ); ?>" type="text" value="<?php echo $username; ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of photos', 'wpiw' ); ?>: <input class="widefat" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="text" value="<?php echo $number; ?>" /></label></p>
-		<p><label for="<?php echo $this->get_field_id( 'size' ); ?>"><?php _e( 'Photo size', 'wpiw' ); ?>:</label>
+		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id( 'username' ); ?>"><?php _e( 'Username', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo $this->get_field_id( 'username' ); ?>" name="<?php echo $this->get_field_name( 'username' ); ?>" type="text" value="<?php echo $username; ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id( 'number' ); ?>"><?php _e( 'Number of photos', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo $this->get_field_id( 'number' ); ?>" name="<?php echo $this->get_field_name( 'number' ); ?>" type="text" value="<?php echo $number; ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id( 'size' ); ?>"><?php _e( 'Photo size', 'wp-instagram-widget' ); ?>:</label>
 			<select id="<?php echo $this->get_field_id( 'size' ); ?>" name="<?php echo $this->get_field_name( 'size' ); ?>" class="widefat">
-				<option value="thumbnail" <?php selected( 'thumbnail', $size ) ?>><?php _e( 'Thumbnail', 'wpiw' ); ?></option>
-				<option value="small" <?php selected( 'small', $size ) ?>><?php _e( 'Small', 'wpiw' ); ?></option>
-				<option value="large" <?php selected( 'large', $size ) ?>><?php _e( 'Large', 'wpiw' ); ?></option>
-				<option value="original" <?php selected( 'original', $size ) ?>><?php _e( 'Original', 'wpiw' ); ?></option>
+				<option value="thumbnail" <?php selected( 'thumbnail', $size ) ?>><?php _e( 'Thumbnail', 'wp-instagram-widget' ); ?></option>
+				<option value="small" <?php selected( 'small', $size ) ?>><?php _e( 'Small', 'wp-instagram-widget' ); ?></option>
+				<option value="large" <?php selected( 'large', $size ) ?>><?php _e( 'Large', 'wp-instagram-widget' ); ?></option>
+				<option value="original" <?php selected( 'original', $size ) ?>><?php _e( 'Original', 'wp-instagram-widget' ); ?></option>
 			</select>
 		</p>
-		<p><label for="<?php echo $this->get_field_id( 'target' ); ?>"><?php _e( 'Open links in', 'wpiw' ); ?>:</label>
+		<p><label for="<?php echo $this->get_field_id( 'target' ); ?>"><?php _e( 'Open links in', 'wp-instagram-widget' ); ?>:</label>
 			<select id="<?php echo $this->get_field_id( 'target' ); ?>" name="<?php echo $this->get_field_name( 'target' ); ?>" class="widefat">
-				<option value="_self" <?php selected( '_self', $target ) ?>><?php _e( 'Current window (_self)', 'wpiw' ); ?></option>
-				<option value="_blank" <?php selected( '_blank', $target ) ?>><?php _e( 'New window (_blank)', 'wpiw' ); ?></option>
+				<option value="_self" <?php selected( '_self', $target ) ?>><?php _e( 'Current window (_self)', 'wp-instagram-widget' ); ?></option>
+				<option value="_blank" <?php selected( '_blank', $target ) ?>><?php _e( 'New window (_blank)', 'wp-instagram-widget' ); ?></option>
 			</select>
 		</p>
-		<p><label for="<?php echo $this->get_field_id( 'link' ); ?>"><?php _e( 'Link text', 'wpiw' ); ?>: <input class="widefat" id="<?php echo $this->get_field_id( 'link' ); ?>" name="<?php echo $this->get_field_name( 'link' ); ?>" type="text" value="<?php echo $link; ?>" /></label></p>
+		<p><label for="<?php echo $this->get_field_id( 'link' ); ?>"><?php _e( 'Link text', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo $this->get_field_id( 'link' ); ?>" name="<?php echo $this->get_field_name( 'link' ); ?>" type="text" value="<?php echo $link; ?>" /></label></p>
 		<?php
 
 	}
@@ -166,26 +166,26 @@ class null_instagram_widget extends WP_Widget {
 			$remote = wp_remote_get( 'http://instagram.com/'.trim( $username ) );
 
 			if ( is_wp_error( $remote ) )
-				return new WP_Error( 'site_down', __( 'Unable to communicate with Instagram.', 'wpiw' ) );
+				return new WP_Error( 'site_down', __( 'Unable to communicate with Instagram.', 'wp-instagram-widget' ) );
 
 			if ( 200 != wp_remote_retrieve_response_code( $remote ) )
-				return new WP_Error( 'invalid_response', __( 'Instagram did not return a 200.', 'wpiw' ) );
+				return new WP_Error( 'invalid_response', __( 'Instagram did not return a 200.', 'wp-instagram-widget' ) );
 
 			$shards = explode( 'window._sharedData = ', $remote['body'] );
 			$insta_json = explode( ';</script>', $shards[1] );
 			$insta_array = json_decode( $insta_json[0], TRUE );
 
 			if ( ! $insta_array )
-				return new WP_Error( 'bad_json', __( 'Instagram has returned invalid data.', 'wpiw' ) );
+				return new WP_Error( 'bad_json', __( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 
 			if ( isset( $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'] ) ) {
 				$images = $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'];
 			} else {
-				return new WP_Error( 'bad_json_2', __( 'Instagram has returned invalid data.', 'wpiw' ) );
+				return new WP_Error( 'bad_json_2', __( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 			}
 
 			if ( ! is_array( $images ) )
-				return new WP_Error( 'bad_array', __( 'Instagram has returned invalid data.', 'wpiw' ) );
+				return new WP_Error( 'bad_array', __( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 
 			$instagram = array();
 
@@ -203,7 +203,7 @@ class null_instagram_widget extends WP_Widget {
 					$type = 'image';
 				}
 
-				$caption = __( 'Instagram Image', 'wpiw' );
+				$caption = __( 'Instagram Image', 'wp-instagram-widget' );
 				if ( ! empty( $image['caption'] ) ) {
 					$caption = $image['caption'];
 				}
@@ -236,7 +236,7 @@ class null_instagram_widget extends WP_Widget {
 
 		} else {
 
-			return new WP_Error( 'no_images', __( 'Instagram did not return any images.', 'wpiw' ) );
+			return new WP_Error( 'no_images', __( 'Instagram did not return any images.', 'wp-instagram-widget' ) );
 
 		}
 	}
