@@ -104,8 +104,10 @@ class null_instagram_widget extends WP_Widget {
 			}
 		}
 
+		$linkclass = esc_attr( apply_filters( 'wpiw_link_class', 'clear' ) );
+
 		if ( $link != '' ) {
-			?><p class="clear"><a href="//instagram.com/<?php echo esc_attr( trim( $username ) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo $link; ?></a></p><?php
+			?><p class="<?php echo $linkclass; ?>"><a href="//instagram.com/<?php echo esc_attr( trim( $username ) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo $link; ?></a></p><?php
 		}
 
 		do_action( 'wpiw_after_widget', $instance );
