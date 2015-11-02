@@ -83,7 +83,7 @@ In version 1.4 and above you can also customise the image loop completely by cre
 * Apologies for all the recent updates, all good things though!
 * Update plugin text domain ready for translate.wordpress.org
 * Introduce an 'original' image size if you want to use non-square originals
-* Introduce new filter for <ul> class `wpiw_list_class`
+* Introduce new filter for `<ul>` class `wpiw_list_class`
 
 ####1.8
 * Bring back image captions
