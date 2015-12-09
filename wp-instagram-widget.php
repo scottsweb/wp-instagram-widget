@@ -162,7 +162,7 @@ class null_instagram_widget extends WP_Widget {
 		$username = strtolower( $username );
 		$username = str_replace( '@', '', $username );
 
-		if ( false === ( $instagram = get_transient( 'instagram-media-5-'.sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( 'instagram-m6-'.sanitize_title_with_dashes( $username ) ) ) ) {
 
 			$remote = wp_remote_get( 'http://instagram.com/'.trim( $username ) );
 
@@ -192,11 +192,21 @@ class null_instagram_widget extends WP_Widget {
 
 			foreach ( $images as $image ) {
 
-				$image['thumbnail_src'] = preg_replace( "/^https:/i", "", $image['thumbnail_src'] );
-				$image['thumbnail'] = str_replace( 's640x640', 's160x160', $image['thumbnail_src'] );
-				$image['small'] = str_replace( 's640x640', 's320x320', $image['thumbnail_src'] );
+				$image['thumbnail_src'] = preg_replace( "/^https:||http:/i", "", $image['thumbnail_src'] );
+
+				// handle both types of CDN url
+				if ( (strpos( $image['thumbnail_src'], 's640x640' ) !== false ) ) {
+					$image['thumbnail'] = str_replace( 's640x640', 's160x160', $image['thumbnail_src'] );
+					$image['small'] = str_replace( 's640x640', 's320x320', $image['thumbnail_src'] );
+				} else {
+					$urlparts = parse_url( $image['thumbnail_src'] );
+					$pathparts = array_values( array_filter( explode( '/', $urlparts['path'] ) ) );
+					$image['thumbnail'] = '//' . $urlparts['host'] . '/' . $pathparts[0] . '/' . $pathparts[1] . '/s160x160/' . $pathparts[2] . '/' . $pathparts[3] . '/' . $pathparts[4];
+					$image['small'] = '//' . $urlparts['host'] . '/' . $pathparts[0] . '/' . $pathparts[1] . '/s320x320/' . $pathparts[2] . '/' . $pathparts[3] . '/' . $pathparts[4];
+				}
+
 				$image['large'] = $image['thumbnail_src'];
-				$image['display_src'] = preg_replace( "/^https:/i", "", $image['display_src'] );
+				$image['display_src'] = preg_replace( "/^https:||http:/i", "", $image['display_src'] );
 
 				if ( $image['is_video'] == true ) {
 					$type = 'video';
@@ -226,7 +236,7 @@ class null_instagram_widget extends WP_Widget {
 			// do not set an empty transient - should help catch private or empty accounts
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'instagram-media-5-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
+				set_transient( 'instagram-m6-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
 			}
 		}
 
