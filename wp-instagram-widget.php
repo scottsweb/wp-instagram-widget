@@ -57,8 +57,6 @@ class null_instagram_widget extends WP_Widget {
 
 	function widget( $args, $instance ) {
 
-		extract( $args, EXTR_SKIP );
-
 		$title = empty( $instance['title'] ) ? '' : apply_filters( 'widget_title', $instance['title'] );
 		$username = empty( $instance['username'] ) ? '' : $instance['username'];
 		$limit = empty( $instance['number'] ) ? 9 : $instance['number'];
@@ -66,8 +64,9 @@ class null_instagram_widget extends WP_Widget {
 		$target = empty( $instance['target'] ) ? '_self' : $instance['target'];
 		$link = empty( $instance['link'] ) ? '' : $instance['link'];
 
-		echo $before_widget;
-		if ( ! empty( $title ) ) { echo $before_title . wp_kses_post( $title ) . $after_title; };
+		echo $args['before_widget'];
+
+		if ( ! empty( $title ) ) { echo $args['before_title'] . wp_kses_post( $title ) . $args['after_title']; };
 
 		do_action( 'wpiw_before_widget', $instance );
 
@@ -112,7 +111,7 @@ class null_instagram_widget extends WP_Widget {
 
 		do_action( 'wpiw_after_widget', $instance );
 
-		echo $after_widget;
+		echo $args['after_widget'];
 	}
 
 	function form( $instance ) {
