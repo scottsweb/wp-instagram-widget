@@ -75,6 +75,12 @@ In version 1.4 and above you can also customise the image loop completely by cre
 
 == Changelog ==
 
+= 1.9 =
+* WordPress.com VIP checked
+* Updated CDN matching to ensure correct image sizes are served at all times
+* Shortened the transient key - should mean we bump into the character limit less often
+* Remove use of `extract`
+
 = 1.8.1 =
 * Apologies for all the recent updates, all good things though!
 * Update plugin text domain ready for translate.wordpress.org
