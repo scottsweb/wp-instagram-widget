@@ -86,10 +86,10 @@ class null_instagram_widget extends WP_Widget {
 					$media_array = array_filter( $media_array, array( $this, 'images_only' ) );
 
 				// filters for custom classes
-				$ulclass = esc_attr( apply_filters( 'wpiw_list_class', 'instagram-pics instagram-size-' . $size ) );
-				$liclass = esc_attr( apply_filters( 'wpiw_item_class', '' ) );
-				$aclass = esc_attr( apply_filters( 'wpiw_a_class', '' ) );
-				$imgclass = esc_attr( apply_filters( 'wpiw_img_class', '' ) );
+				$ulclass = apply_filters( 'wpiw_list_class', 'instagram-pics instagram-size-' . $size );
+				$liclass = apply_filters( 'wpiw_item_class', '' );
+				$aclass = apply_filters( 'wpiw_a_class', '' );
+				$imgclass = apply_filters( 'wpiw_img_class', '' );
 
 				?><ul class="<?php echo esc_attr( $ulclass ); ?>"><?php
 				foreach ( $media_array as $item ) {
@@ -117,12 +117,12 @@ class null_instagram_widget extends WP_Widget {
 
 	function form( $instance ) {
 		$instance = wp_parse_args( (array) $instance, array( 'title' => __( 'Instagram', 'wp-instagram-widget' ), 'username' => '', 'size' => 'large', 'link' => __( 'Follow Me!', 'wp-instagram-widget' ), 'number' => 9, 'target' => '_self' ) );
-		$title = esc_attr( $instance['title'] );
-		$username = esc_attr( $instance['username'] );
+		$title = $instance['title'];
+		$username = $instance['username'];
 		$number = absint( $instance['number'] );
-		$size = esc_attr( $instance['size'] );
-		$target = esc_attr( $instance['target'] );
-		$link = esc_attr( $instance['link'] );
+		$size = $instance['size'];
+		$target = $instance['target'];
+		$link = $instance['link'];
 		?>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" /></label></p>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'username' ) ); ?>"><?php esc_html_e( 'Username', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'username' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'username' ) ); ?>" type="text" value="<?php echo esc_attr( $username ); ?>" /></label></p>
