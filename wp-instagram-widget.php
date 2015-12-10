@@ -3,7 +3,7 @@
 Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/scottsweb/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos.
-Version: 1.9
+Version: 1.9.1
 Author: Scott Evans
 Author URI: http://scott.ee
 Text Domain: wp-instagram-widget
@@ -162,7 +162,7 @@ class null_instagram_widget extends WP_Widget {
 		$username = strtolower( $username );
 		$username = str_replace( '@', '', $username );
 
-		if ( false === ( $instagram = get_transient( 'instagram-m6-'.sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( 'instagram-m7-'.sanitize_title_with_dashes( $username ) ) ) ) {
 
 			$remote = wp_remote_get( 'http://instagram.com/'.trim( $username ) );
 
@@ -201,8 +201,8 @@ class null_instagram_widget extends WP_Widget {
 				} else {
 					$urlparts = parse_url( $image['thumbnail_src'] );
 					$pathparts = array_values( array_filter( explode( '/', $urlparts['path'] ) ) );
-					$image['thumbnail'] = '//' . $urlparts['host'] . '/' . $pathparts[0] . '/' . $pathparts[1] . '/s160x160/' . $pathparts[2] . '/' . $pathparts[3] . '/' . $pathparts[4];
-					$image['small'] = '//' . $urlparts['host'] . '/' . $pathparts[0] . '/' . $pathparts[1] . '/s320x320/' . $pathparts[2] . '/' . $pathparts[3] . '/' . $pathparts[4];
+					$image['thumbnail'] = untrailingslashit( '//' . $urlparts['host'] . '/' . $pathparts[0] . '/' . $pathparts[1] . '/s160x160/' . $pathparts[2] . '/' . $pathparts[3] . '/' . $pathparts[4] );
+					$image['small'] = untrailingslashit( '//' . $urlparts['host'] . '/' . $pathparts[0] . '/' . $pathparts[1] . '/s320x320/' . $pathparts[2] . '/' . $pathparts[3] . '/' . $pathparts[4] );
 				}
 
 				$image['large'] = $image['thumbnail_src'];
@@ -236,7 +236,7 @@ class null_instagram_widget extends WP_Widget {
 			// do not set an empty transient - should help catch private or empty accounts
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'instagram-m6-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
+				set_transient( 'instagram-m7-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
 			}
 		}
 

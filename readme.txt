@@ -75,6 +75,9 @@ In version 1.4 and above you can also customise the image loop completely by cre
 
 == Changelog ==
 
+= 1.9.1 =
+* Fix bug with some image URLs
+
 = 1.9 =
 * WordPress.com VIP checked
 * Updated CDN matching to ensure correct image sizes are served at all times
