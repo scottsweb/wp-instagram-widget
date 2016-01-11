@@ -192,21 +192,21 @@ class null_instagram_widget extends WP_Widget {
 
 			foreach ( $images as $image ) {
 
-				$image['thumbnail_src'] = preg_replace( "/^https:||http:/i", "", $image['thumbnail_src'] );
+				$image['thumbnail_src'] = preg_replace( '/^https?\:/i', '', $image['thumbnail_src'] );
+				$image['display_src'] = preg_replace( '/^https?\:/i', '', $image['display_src'] );
 
 				// handle both types of CDN url
-				if ( (strpos( $image['thumbnail_src'], 's640x640' ) !== false ) ) {
-					$image['thumbnail'] = str_replace( 's640x640', 's160x160', $image['thumbnail_src'] );
-					$image['small'] = str_replace( 's640x640', 's320x320', $image['thumbnail_src'] );
-				} else {
-					$urlparts = parse_url( $image['thumbnail_src'] );
-					$pathparts = array_values( array_filter( explode( '/', $urlparts['path'] ) ) );
-					$image['thumbnail'] = untrailingslashit( '//' . $urlparts['host'] . '/' . $pathparts[0] . '/' . $pathparts[1] . '/s160x160/' . $pathparts[2] . '/' . $pathparts[3] . '/' . $pathparts[4] );
-					$image['small'] = untrailingslashit( '//' . $urlparts['host'] . '/' . $pathparts[0] . '/' . $pathparts[1] . '/s320x320/' . $pathparts[2] . '/' . $pathparts[3] . '/' . $pathparts[4] );
+				$urlparts = parse_url( $image['thumbnail_src'] );
+				$pathparts = explode( '/', $urlparts['path'] );
+				if ( ! preg_match('/s\d+x\d+/', $pathparts[3]) ) {
+					array_splice($pathparts, 3, 0, '');
 				}
 
+				$pathparts[3] = 's160x160';
+				$image['thumbnail'] = '//' . $urlparts['host'] . implode('/', $pathparts);
+				$pathparts[3] = 's320x320';
+				$image['small'] = '//' . $urlparts['host'] . implode('/', $pathparts);
 				$image['large'] = $image['thumbnail_src'];
-				$image['display_src'] = preg_replace( "/^https:||http:/i", "", $image['display_src'] );
 
 				if ( $image['is_video'] == true ) {
 					$type = 'video';
