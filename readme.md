@@ -79,6 +79,9 @@ In version 1.4 and above you can also customise the image loop completely by cre
 
 ## Changelog
 
+####1.9.3
+* Fix issues introduced in the last version (apologies). Certain CDN URLs are still in use
+
 ####1.9.2
 * Better handling of all image and video image URLs props @thegallagher
 
