@@ -162,7 +162,7 @@ class null_instagram_widget extends WP_Widget {
 		$username = strtolower( $username );
 		$username = str_replace( '@', '', $username );
 
-		if ( false === ( $instagram = get_transient( 'instagram-a1-'.sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( 'instagram-a2-'.sanitize_title_with_dashes( $username ) ) ) ) {
 
 			$remote = wp_remote_get( 'http://instagram.com/'.trim( $username ) );
 
@@ -202,10 +202,6 @@ class null_instagram_widget extends WP_Widget {
 				} else {
 					$urlparts = parse_url( $image['thumbnail_src'] );
 					$pathparts = explode( '/', $urlparts['path'] );
-					if ( ! preg_match('/s\d+x\d+/', $pathparts[3]) ) {
-						array_splice($pathparts, 3, 0, '');
-					}
-
 					$pathparts[3] = 's160x160';
 					$image['thumbnail'] = '//' . $urlparts['host'] . implode('/', $pathparts);
 					$pathparts[3] = 's320x320';
@@ -242,7 +238,7 @@ class null_instagram_widget extends WP_Widget {
 			// do not set an empty transient - should help catch private or empty accounts
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'instagram-a1-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
+				set_transient( 'instagram-a2-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
 			}
 		}
 
