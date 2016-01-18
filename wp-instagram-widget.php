@@ -200,7 +200,7 @@ class null_instagram_widget extends WP_Widget {
 					$image['thumbnail'] = str_replace( 's640x640', 's160x160', $image['thumbnail_src'] );
 					$image['small'] = str_replace( 's640x640', 's320x320', $image['thumbnail_src'] );
 				} else {
-					$urlparts = parse_url( $image['thumbnail_src'] );
+					$urlparts = wp_parse_url( $image['thumbnail_src'] );
 					$pathparts = explode( '/', $urlparts['path'] );
 					$pathparts[3] = 's160x160';
 					$image['thumbnail'] = '//' . $urlparts['host'] . implode('/', $pathparts);
