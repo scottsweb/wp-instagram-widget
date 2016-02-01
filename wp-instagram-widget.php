@@ -3,7 +3,7 @@
 Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/scottsweb/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos.
-Version: 1.9.4
+Version: 1.9.5
 Author: Scott Evans
 Author URI: http://scott.ee
 Text Domain: wp-instagram-widget
@@ -202,7 +202,7 @@ class null_instagram_widget extends WP_Widget {
 				} else {
 					$urlparts = wp_parse_url( $image['thumbnail_src'] );
 					$pathparts = explode( '/', $urlparts['path'] );
-					$pathparts[3] = 's160x160';
+					array_splice( $pathparts, 3, 0, array( 's160x160' ) );
 					$image['thumbnail'] = '//' . $urlparts['host'] . implode('/', $pathparts);
 					$pathparts[3] = 's320x320';
 					$image['small'] = '//' . $urlparts['host'] . implode('/', $pathparts);
