@@ -75,6 +75,9 @@ In version 1.4 and above you can also customise the image loop completely by cre
 
 == Changelog ==
 
+= 1.9.5 = 
+* Another fix for image URL handling, I think we have all the edge cases now!
+
 = 1.9.4 =
 * IMPORTANT: You must be on WordPress 4.4 or later to upgrade to this version of the plugin. This fixes a bug with PHP versions < 5.4.7. If you are on a version of WordPress older than 4.4 and you notice images are not loading then I recommend rolling your version of the widget back to this version: https://github.com/scottsweb/wp-instagram-widget/blob/c66550eded59bd51f508f304a85a3e031ac4044c/wp-instagram-widget.php
 
