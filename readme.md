@@ -2,7 +2,7 @@
 
 # WP Instagram Widget
 
-* Status: ✔ Active
+* Status: ✅ Active
 * Contributors: [@scottsweb](http://twitter.com/scottsweb)
 * Description: WP Instagram widget is a no fuss WordPress widget to showcase your latest Instagram pics.
 * Author: [Scott Evans](http://scott.ee)
