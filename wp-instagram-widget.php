@@ -89,12 +89,13 @@ class null_instagram_widget extends WP_Widget {
 				$liclass = apply_filters( 'wpiw_item_class', '' );
 				$aclass = apply_filters( 'wpiw_a_class', '' );
 				$imgclass = apply_filters( 'wpiw_img_class', '' );
+        $template_part = apply_filters( 'wpiw_template_part', 'parts/wp-instagram-widget.php' );
 
 				?><ul class="<?php echo esc_attr( $ulclass ); ?>"><?php
 				foreach ( $media_array as $item ) {
 					// copy the else line into a new file (parts/wp-instagram-widget.php) within your theme and customise accordingly
-					if ( locate_template( 'parts/wp-instagram-widget.php' ) != '' ) {
-						include locate_template( 'parts/wp-instagram-widget.php' );
+					if ( locate_template( $template_part ) != '' ) {
+						include locate_template( $template_part );
 					} else {
 						echo '<li class="'. esc_attr( $liclass ) .'"><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"  class="'. esc_attr( $aclass ) .'"><img src="'. esc_url( $item[$size] ) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"  class="'. esc_attr( $imgclass ) .'"/></a></li>';
 					}
