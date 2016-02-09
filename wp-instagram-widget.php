@@ -89,7 +89,7 @@ class null_instagram_widget extends WP_Widget {
 				$liclass = apply_filters( 'wpiw_item_class', '' );
 				$aclass = apply_filters( 'wpiw_a_class', '' );
 				$imgclass = apply_filters( 'wpiw_img_class', '' );
-        $template_part = apply_filters( 'wpiw_template_part', 'parts/wp-instagram-widget.php' );
+				$template_part = apply_filters( 'wpiw_template_part', 'parts/wp-instagram-widget.php' );
 
 				?><ul class="<?php echo esc_attr( $ulclass ); ?>"><?php
 				foreach ( $media_array as $item ) {
