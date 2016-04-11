@@ -73,11 +73,18 @@ wpiw_after_widget
 
 In version 1.4 and above you can also customise the image loop completely by creating a `parts/wp-instagram-widget.php` file in your theme.
 
+In version 1.9.6 you can now use a filter to change the location of your custom template part: `wpiw_template_part`.
+
 ## Frequently Asked Questions
 
 ...
 
 ## Changelog
+
+####1.9.6
+* Trailing slash all URLs to support Instagram app on iOS
+* Support selective refresh in 4.5
+* New filter for `wpiw_template_part`
 
 ####1.9.5
 * Another fix for image URL handling, I think we have all the edge cases now!

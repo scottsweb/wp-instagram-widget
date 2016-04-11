@@ -2,7 +2,7 @@
 Contributors: scottsweb, codeforthepeople
 Tags: instagram, widget, photos, photography, hipster, sidebar, widgets, simple
 Requires at least: 4.4
-Tested up to: 4.4.1
+Tested up to: 4.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -68,6 +68,8 @@ In version 1.3 you also have two new hooks for adding custom output before and a
 
 In version 1.4 and above you can also customise the image loop completely by creating a `parts/wp-instagram-widget.php` file in your theme.
 
+In version 1.9.6 you can now use a filter to change the location of your custom template part: `wpiw_template_part`.
+
 == Screenshots ==
 
 1. Instagram widget on the front end
@@ -75,7 +77,12 @@ In version 1.4 and above you can also customise the image loop completely by cre
 
 == Changelog ==
 
-= 1.9.5 = 
+= 1.9.6 =
+* Trailing slash all URLs to support Instagram app on iOS
+* Support selective refresh in 4.5
+* New filter for `wpiw_template_part`
+
+= 1.9.5 =
 * Another fix for image URL handling, I think we have all the edge cases now!
 
 = 1.9.4 =
