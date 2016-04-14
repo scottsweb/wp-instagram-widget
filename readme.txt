@@ -77,6 +77,9 @@ In version 1.9.6 you can now use a filter to change the location of your custom 
 
 == Changelog ==
 
+= 1.9.7 =
+* Fix double trailing slash on custom text link
+
 = 1.9.6 =
 * Trailing slash all URLs to support Instagram app on iOS
 * Support selective refresh in 4.5
