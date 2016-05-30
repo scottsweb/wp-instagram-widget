@@ -76,7 +76,7 @@ class null_instagram_widget extends WP_Widget {
 
 		if ( $username != '' ) {
 
-			$media_array = $this->scrape_instagram( $username, $limit );
+			$media_array = $this->scrape_instagram( $username );
 
 			if ( is_wp_error( $media_array ) ) {
 
@@ -87,6 +87,9 @@ class null_instagram_widget extends WP_Widget {
 				// filter for images only?
 				if ( $images_only = apply_filters( 'wpiw_images_only', FALSE ) )
 					$media_array = array_filter( $media_array, array( $this, 'images_only' ) );
+
+				// Slice list down to required limit
+				$media_array = array_slice($media_array, 0, $limit);
 
 				// filters for custom classes
 				$ulclass = apply_filters( 'wpiw_list_class', 'instagram-pics instagram-size-' . $size );
@@ -162,7 +165,7 @@ class null_instagram_widget extends WP_Widget {
 	}
 
 	// based on https://gist.github.com/cosmocatalano/4544576
-	function scrape_instagram( $username, $slice = 9 ) {
+	function scrape_instagram( $username ) {
 
 		$username = strtolower( $username );
 		$username = str_replace( '@', '', $username );
@@ -249,8 +252,7 @@ class null_instagram_widget extends WP_Widget {
 
 		if ( ! empty( $instagram ) ) {
 
-			$instagram = unserialize( base64_decode( $instagram ) );
-			return array_slice( $instagram, 0, $slice );
+			return unserialize( base64_decode( $instagram ) );
 
 		} else {
 
