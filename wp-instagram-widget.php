@@ -3,7 +3,7 @@
 Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/scottsweb/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos.
-Version: 1.9.7
+Version: 1.9.8
 Author: Scott Evans
 Author URI: http://scott.ee
 Text Domain: wp-instagram-widget
@@ -85,11 +85,12 @@ class null_instagram_widget extends WP_Widget {
 			} else {
 
 				// filter for images only?
-				if ( $images_only = apply_filters( 'wpiw_images_only', FALSE ) )
+				if ( $images_only = apply_filters( 'wpiw_images_only', FALSE ) ) {
 					$media_array = array_filter( $media_array, array( $this, 'images_only' ) );
+				}
 
-				// Slice list down to required limit
-				$media_array = array_slice($media_array, 0, $limit);
+				// slice list down to required limit
+				$media_array = array_slice( $media_array, 0, $limit );
 
 				// filters for custom classes
 				$ulclass = apply_filters( 'wpiw_list_class', 'instagram-pics instagram-size-' . $size );
@@ -204,16 +205,16 @@ class null_instagram_widget extends WP_Widget {
 				$image['display_src'] = preg_replace( '/^https?\:/i', '', $image['display_src'] );
 
 				// handle both types of CDN url
-				if ( (strpos( $image['thumbnail_src'], 's640x640' ) !== false ) ) {
+				if ( ( strpos( $image['thumbnail_src'], 's640x640' ) !== false ) ) {
 					$image['thumbnail'] = str_replace( 's640x640', 's160x160', $image['thumbnail_src'] );
 					$image['small'] = str_replace( 's640x640', 's320x320', $image['thumbnail_src'] );
 				} else {
 					$urlparts = wp_parse_url( $image['thumbnail_src'] );
 					$pathparts = explode( '/', $urlparts['path'] );
 					array_splice( $pathparts, 3, 0, array( 's160x160' ) );
-					$image['thumbnail'] = '//' . $urlparts['host'] . implode('/', $pathparts);
+					$image['thumbnail'] = '//' . $urlparts['host'] . implode( '/', $pathparts );
 					$pathparts[3] = 's320x320';
-					$image['small'] = '//' . $urlparts['host'] . implode('/', $pathparts);
+					$image['small'] = '//' . $urlparts['host'] . implode( '/', $pathparts );
 				}
 
 				$image['large'] = $image['thumbnail_src'];

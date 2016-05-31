@@ -81,6 +81,9 @@ In version 1.9.6 you can now use a filter to change the location of your custom 
 
 ## Changelog
 
+####1.9.8
+* Return more items when using filter for images only
+
 ####1.9.7
 * Fix double trailing slash on custom text link
 
