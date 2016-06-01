@@ -34,6 +34,7 @@ function wpiw_init() {
 	define( 'WP_INSTAGRAM_WIDGET_PATH', dirname( __FILE__ ) );
 	define( 'WP_INSTAGRAM_WIDGET_BASE', plugin_basename( __FILE__ ) );
 	define( 'WP_INSTAGRAM_WIDGET_FILE', __FILE__ );
+	define( 'WP_INSTAGRAM_WIDGET_TPL_PATH', trailingslashit(WP_INSTAGRAM_WIDGET_PATH).'templates/');
 
 	// load language files
 	load_plugin_textdomain( 'wp-instagram-widget', false, dirname( WP_INSTAGRAM_WIDGET_BASE ) . '/assets/languages/' );
@@ -97,18 +98,38 @@ class null_instagram_widget extends WP_Widget {
 				$liclass = apply_filters( 'wpiw_item_class', '' );
 				$aclass = apply_filters( 'wpiw_a_class', '' );
 				$imgclass = apply_filters( 'wpiw_img_class', '' );
-				$template_part = apply_filters( 'wpiw_template_part', 'parts/wp-instagram-widget.php' );
 
-				?><ul class="<?php echo esc_attr( $ulclass ); ?>"><?php
-				foreach ( $media_array as $item ) {
-					// copy the else line into a new file (parts/wp-instagram-widget.php) within your theme and customise accordingly
-					if ( locate_template( $template_part ) != '' ) {
-						include locate_template( $template_part );
-					} else {
-						echo '<li class="'. esc_attr( $liclass ) .'"><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"  class="'. esc_attr( $aclass ) .'"><img src="'. esc_url( $item[$size] ) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"  class="'. esc_attr( $imgclass ) .'"/></a></li>';
-					}
+				// Template for List (UL)
+				$list_template = apply_filters( 'wpiw_list_template_part', 'parts/wp-instagram-widget-list.php' );
+
+				// Template for List Item (LI)
+				$item_template_legacy = apply_filters( 'wpiw_template_part', 'parts/wp-instagram-widget.php' ); // Legacy Support
+				$item_template = apply_filters( 'wpiw_item_template_part', 'parts/wp-instagram-widget-item.php' ); // Updated
+
+				// Determine which Item Template to use
+				if(locate_template($item_template) != '') {
+					// Use Overridden Item Template
+					$item_template = locate_template($item_template);
 				}
-				?></ul><?php
+				elseif(locate_template($item_template_legacy) != '') {
+					// Use Legacy Overridden Item Template
+					$item_template = locate_template($item_template_legacy);
+				}
+				else {
+					// Use Default Item Template
+					$item_template = WP_INSTAGRAM_WIDGET_TPL_PATH.'wp-instagram-widget-item.php';
+				}
+
+				// Include List Template
+				if(locate_template($list_template) != '') {
+					// Use Overridden List Template
+					include locate_template($list_template);
+				}
+				else {
+					// Use Default List Template
+					include WP_INSTAGRAM_WIDGET_TPL_PATH.'wp-instagram-widget-list.php';
+				}
+
 			}
 		}
 
