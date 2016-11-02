@@ -63,6 +63,7 @@ class null_instagram_widget extends WP_Widget {
 
 		$title = empty( $instance['title'] ) ? '' : apply_filters( 'widget_title', $instance['title'] );
 		$username = empty( $instance['username'] ) ? '' : $instance['username'];
+		$hashtag = empty( $instance['hashtag'] ) ? '' : $instance['hashtag'];
 		$limit = empty( $instance['number'] ) ? 9 : $instance['number'];
 		$size = empty( $instance['size'] ) ? 'large' : $instance['size'];
 		$target = empty( $instance['target'] ) ? '_self' : $instance['target'];
@@ -74,9 +75,13 @@ class null_instagram_widget extends WP_Widget {
 
 		do_action( 'wpiw_before_widget', $instance );
 
-		if ( $username != '' ) {
+		if ( $username != '' || $hashtag != '' ) {
 
-			$media_array = $this->scrape_instagram( $username );
+			if ( $username != '' ) {
+				$media_array = $this->scrape_instagram( $username , false );
+			} elseif ( $hashtag != '' ) {
+				$media_array = $this->scrape_instagram( $hashtag, true );
+			}
 
 			if ( is_wp_error( $media_array ) ) {
 
@@ -115,7 +120,12 @@ class null_instagram_widget extends WP_Widget {
 		$linkclass = apply_filters( 'wpiw_link_class', 'clear' );
 
 		if ( $link != '' ) {
-			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo trailingslashit( '//instagram.com/' . esc_attr( trim( $username ) ) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
+			if ( $username != '' ) {
+				$url = trailingslashit( '//instagram.com/' . esc_attr( trim( $username ) ) );
+			} elseif ( $hashtag != '' ) {
+				$url = trailingslashit( '//instagram.com/explore/tags/' . esc_attr( trim( $hashtag ) ) );
+			}
+			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo $url; ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
 		}
 
 		do_action( 'wpiw_after_widget', $instance );
@@ -124,9 +134,10 @@ class null_instagram_widget extends WP_Widget {
 	}
 
 	function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array( 'title' => __( 'Instagram', 'wp-instagram-widget' ), 'username' => '', 'size' => 'large', 'link' => __( 'Follow Me!', 'wp-instagram-widget' ), 'number' => 9, 'target' => '_self' ) );
+		$instance = wp_parse_args( (array) $instance, array( 'title' => __( 'Instagram', 'wp-instagram-widget' ), 'username' => '', 'hashtag' => '', 'size' => 'large', 'link' => __( 'Follow Me!', 'wp-instagram-widget' ), 'number' => 9, 'target' => '_self' ) );
 		$title = $instance['title'];
 		$username = $instance['username'];
+		$hashtag = $instance['hashtag'];
 		$number = absint( $instance['number'] );
 		$size = $instance['size'];
 		$target = $instance['target'];
@@ -134,6 +145,7 @@ class null_instagram_widget extends WP_Widget {
 		?>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" /></label></p>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'username' ) ); ?>"><?php esc_html_e( 'Username', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'username' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'username' ) ); ?>" type="text" value="<?php echo esc_attr( $username ); ?>" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'hashtag' ) ); ?>"><?php esc_html_e( 'Hashtag (only works when Username is empty)', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'hashtag' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hashtag' ) ); ?>" type="text" value="<?php echo esc_attr( $hashtag ); ?>" /></label></p>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>"><?php esc_html_e( 'Number of photos', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'number' ) ); ?>" type="text" value="<?php echo esc_attr( $number ); ?>" /></label></p>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>"><?php esc_html_e( 'Photo size', 'wp-instagram-widget' ); ?>:</label>
 			<select id="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'size' ) ); ?>" class="widefat">
@@ -158,6 +170,7 @@ class null_instagram_widget extends WP_Widget {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['username'] = trim( strip_tags( $new_instance['username'] ) );
+		$instance['hashtag'] = trim( strip_tags( $new_instance['hashtag'] ) );
 		$instance['number'] = ! absint( $new_instance['number'] ) ? 9 : $new_instance['number'];
 		$instance['size'] = ( ( $new_instance['size'] == 'thumbnail' || $new_instance['size'] == 'large' || $new_instance['size'] == 'small' || $new_instance['size'] == 'original' ) ? $new_instance['size'] : 'large' );
 		$instance['target'] = ( ( $new_instance['target'] == '_self' || $new_instance['target'] == '_blank' ) ? $new_instance['target'] : '_self' );
@@ -166,14 +179,14 @@ class null_instagram_widget extends WP_Widget {
 	}
 
 	// based on https://gist.github.com/cosmocatalano/4544576
-	function scrape_instagram( $username ) {
+	function scrape_instagram( $username , $is_hashtag = false ) {
 
 		$username = strtolower( $username );
-		$username = str_replace( '@', '', $username );
+		$username = str_replace( array( '@', '#' ), '', $username );
 
-		if ( false === ( $instagram = get_transient( 'instagram-a5-'.sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( 'instagram-a5-'.sanitize_title_with_dashes( $username ).($is_hashtag ? '_hashtag' : '') ) ) ) {
 
-			$remote = wp_remote_get( 'http://instagram.com/'.trim( $username ) );
+			$remote = $is_hashtag ? wp_remote_get( 'http://instagram.com/explore/tags/'.trim( $username ) ) : wp_remote_get( 'http://instagram.com/'.trim( $username ) );
 
 			if ( is_wp_error( $remote ) )
 				return new WP_Error( 'site_down', esc_html__( 'Unable to communicate with Instagram.', 'wp-instagram-widget' ) );
@@ -188,8 +201,8 @@ class null_instagram_widget extends WP_Widget {
 			if ( ! $insta_array )
 				return new WP_Error( 'bad_json', esc_html__( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 
-			if ( isset( $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'] ) ) {
-				$images = $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'];
+			if ( isset( $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'] ) || isset( $insta_array['entry_data']['TagPage'][0]['tag']['media']['nodes'] ) ) {
+				$images = $is_hashtag ? $insta_array['entry_data']['TagPage'][0]['tag']['media']['nodes'] : $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'];
 			} else {
 				return new WP_Error( 'bad_json_2', esc_html__( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 			}
@@ -247,7 +260,7 @@ class null_instagram_widget extends WP_Widget {
 			// do not set an empty transient - should help catch private or empty accounts
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'instagram-a5-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
+				set_transient( 'instagram-a5-'.sanitize_title_with_dashes( $username ).($is_hashtag ? '_hashtag' : ''), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
 			}
 		}
 
