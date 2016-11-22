@@ -27,7 +27,7 @@ GNU General Public License for more details.
 
 function wpiw_init() {
 
-	// define some constants
+	// define some constants.
 	define( 'WP_INSTAGRAM_WIDGET_JS_URL', plugins_url( '/assets/js', __FILE__ ) );
 	define( 'WP_INSTAGRAM_WIDGET_CSS_URL', plugins_url( '/assets/css', __FILE__ ) );
 	define( 'WP_INSTAGRAM_WIDGET_IMAGES_URL', plugins_url( '/assets/images', __FILE__ ) );
@@ -35,7 +35,7 @@ function wpiw_init() {
 	define( 'WP_INSTAGRAM_WIDGET_BASE', plugin_basename( __FILE__ ) );
 	define( 'WP_INSTAGRAM_WIDGET_FILE', __FILE__ );
 
-	// load language files
+	// load language files.
 	load_plugin_textdomain( 'wp-instagram-widget', false, dirname( WP_INSTAGRAM_WIDGET_BASE ) . '/assets/languages/' );
 }
 add_action( 'init', 'wpiw_init' );
@@ -45,7 +45,7 @@ function wpiw_widget() {
 }
 add_action( 'widgets_init', 'wpiw_widget' );
 
-class null_instagram_widget extends WP_Widget {
+Class null_instagram_widget extends WP_Widget {
 
 	function __construct() {
 		parent::__construct(
@@ -54,7 +54,7 @@ class null_instagram_widget extends WP_Widget {
 			array(
 				'classname' => 'null-instagram-feed',
 				'description' => esc_html__( 'Displays your latest Instagram photos', 'wp-instagram-widget' ),
-				'customize_selective_refresh' => true
+				'customize_selective_refresh' => true,
 			)
 		);
 	}
@@ -74,7 +74,7 @@ class null_instagram_widget extends WP_Widget {
 
 		do_action( 'wpiw_before_widget', $instance );
 
-		if ( $username != '' ) {
+		if ( '' !== $username ) {
 
 			$media_array = $this->scrape_instagram( $username );
 
@@ -85,14 +85,14 @@ class null_instagram_widget extends WP_Widget {
 			} else {
 
 				// filter for images only?
-				if ( $images_only = apply_filters( 'wpiw_images_only', FALSE ) ) {
+				if ( $images_only = apply_filters( 'wpiw_images_only', false ) ) {
 					$media_array = array_filter( $media_array, array( $this, 'images_only' ) );
 				}
 
-				// slice list down to required limit
+				// slice list down to required limit.
 				$media_array = array_slice( $media_array, 0, $limit );
 
-				// filters for custom classes
+				// filters for custom classes.
 				$ulclass = apply_filters( 'wpiw_list_class', 'instagram-pics instagram-size-' . $size );
 				$liclass = apply_filters( 'wpiw_item_class', '' );
 				$aclass = apply_filters( 'wpiw_a_class', '' );
@@ -100,12 +100,12 @@ class null_instagram_widget extends WP_Widget {
 				$template_part = apply_filters( 'wpiw_template_part', 'parts/wp-instagram-widget.php' );
 
 				?><ul class="<?php echo esc_attr( $ulclass ); ?>"><?php
-				foreach ( $media_array as $item ) {
-					// copy the else line into a new file (parts/wp-instagram-widget.php) within your theme and customise accordingly
-					if ( locate_template( $template_part ) != '' ) {
+				foreach( $media_array as $item ) {
+					// copy the else line into a new file (parts/wp-instagram-widget.php) within your theme and customise accordingly.
+					if ( locate_template( $template_part ) !== '' ) {
 						include locate_template( $template_part );
 					} else {
-						echo '<li class="'. esc_attr( $liclass ) .'"><a href="'. esc_url( $item['link'] ) .'" target="'. esc_attr( $target ) .'"  class="'. esc_attr( $aclass ) .'"><img src="'. esc_url( $item[$size] ) .'"  alt="'. esc_attr( $item['description'] ) .'" title="'. esc_attr( $item['description'] ).'"  class="'. esc_attr( $imgclass ) .'"/></a></li>';
+						echo '<li class="' . esc_attr( $liclass ) . '"><a href="' . esc_url( $item['link'] ) . '" target="' . esc_attr( $target ) . '"  class="' . esc_attr( $aclass ) . '"><img src="' . esc_url( $item[$size] ) . '"  alt="' . esc_attr( $item['description'] ) . '" title="' . esc_attr( $item['description'] ) . '"  class="' . esc_attr( $imgclass ) . '"/></a></li>';
 					}
 				}
 				?></ul><?php
@@ -114,7 +114,7 @@ class null_instagram_widget extends WP_Widget {
 
 		$linkclass = apply_filters( 'wpiw_link_class', 'clear' );
 
-		if ( $link != '' ) {
+		if ( '' !== $link ) {
 			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo trailingslashit( '//instagram.com/' . esc_attr( trim( $username ) ) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
 		}
 
@@ -159,34 +159,37 @@ class null_instagram_widget extends WP_Widget {
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		$instance['username'] = trim( strip_tags( $new_instance['username'] ) );
 		$instance['number'] = ! absint( $new_instance['number'] ) ? 9 : $new_instance['number'];
-		$instance['size'] = ( ( $new_instance['size'] == 'thumbnail' || $new_instance['size'] == 'large' || $new_instance['size'] == 'small' || $new_instance['size'] == 'original' ) ? $new_instance['size'] : 'large' );
-		$instance['target'] = ( ( $new_instance['target'] == '_self' || $new_instance['target'] == '_blank' ) ? $new_instance['target'] : '_self' );
+		$instance['size'] = ( ( 'thumbnail' === $new_instance['size'] || 'large' === $new_instance['size'] || 'small' === $new_instance['size'] || 'original' === $new_instance['size'] ) ? $new_instance['size'] : 'large' );
+		$instance['target'] = ( ( '_self' === $new_instance['target'] || '_blank' === $new_instance['target'] ) ? $new_instance['target'] : '_self' );
 		$instance['link'] = strip_tags( $new_instance['link'] );
 		return $instance;
 	}
 
-	// based on https://gist.github.com/cosmocatalano/4544576
+	// based on https://gist.github.com/cosmocatalano/4544576.
 	function scrape_instagram( $username ) {
 
 		$username = strtolower( $username );
 		$username = str_replace( '@', '', $username );
 
-		if ( false === ( $instagram = get_transient( 'instagram-a6-'.sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( 'instagram-a6-' . sanitize_title_with_dashes( $username ) ) ) ) {
 
-			$remote = wp_remote_get( 'https://instagram.com/'.trim( $username ) );
+			$remote = wp_remote_get( 'https://instagram.com/' . trim( $username ) );
 
-			if ( is_wp_error( $remote ) )
+			if ( is_wp_error( $remote ) ) {
 				return new WP_Error( 'site_down', esc_html__( 'Unable to communicate with Instagram.', 'wp-instagram-widget' ) );
+			}
 
-			if ( 200 != wp_remote_retrieve_response_code( $remote ) )
+			if ( 200 !== wp_remote_retrieve_response_code( $remote ) ) {
 				return new WP_Error( 'invalid_response', esc_html__( 'Instagram did not return a 200.', 'wp-instagram-widget' ) );
+			}
 
 			$shards = explode( 'window._sharedData = ', $remote['body'] );
 			$insta_json = explode( ';</script>', $shards[1] );
-			$insta_array = json_decode( $insta_json[0], TRUE );
+			$insta_array = json_decode( $insta_json[0], true );
 
-			if ( ! $insta_array )
+			if ( ! $insta_array ) {
 				return new WP_Error( 'bad_json', esc_html__( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
+			}
 
 			if ( isset( $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'] ) ) {
 				$images = $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'];
@@ -194,8 +197,9 @@ class null_instagram_widget extends WP_Widget {
 				return new WP_Error( 'bad_json_2', esc_html__( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 			}
 
-			if ( ! is_array( $images ) )
+			if ( ! is_array( $images ) ) {
 				return new WP_Error( 'bad_array', esc_html__( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
+			}
 
 			$instagram = array();
 
@@ -204,7 +208,7 @@ class null_instagram_widget extends WP_Widget {
 				$image['thumbnail_src'] = preg_replace( '/^https?\:/i', '', $image['thumbnail_src'] );
 				$image['display_src'] = preg_replace( '/^https?\:/i', '', $image['display_src'] );
 
-				// handle both types of CDN url
+				// handle both types of CDN url.
 				if ( ( strpos( $image['thumbnail_src'], 's640x640' ) !== false ) ) {
 					$image['thumbnail'] = str_replace( 's640x640', 's160x160', $image['thumbnail_src'] );
 					$image['small'] = str_replace( 's640x640', 's320x320', $image['thumbnail_src'] );
@@ -219,7 +223,7 @@ class null_instagram_widget extends WP_Widget {
 
 				$image['large'] = $image['thumbnail_src'];
 
-				if ( $image['is_video'] == true ) {
+				if ( true === $image['is_video'] ) {
 					$type = 'video';
 				} else {
 					$type = 'image';
@@ -240,14 +244,14 @@ class null_instagram_widget extends WP_Widget {
 					'small'			=> $image['small'],
 					'large'			=> $image['large'],
 					'original'		=> $image['display_src'],
-					'type'		  	=> $type
+					'type'		  	=> $type,
 				);
-			}
+			} // End foreach().
 
-			// do not set an empty transient - should help catch private or empty accounts
+			// do not set an empty transient - should help catch private or empty accounts.
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'instagram-a6-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
+				set_transient( 'instagram-a6-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 2 ) );
 			}
 		}
 
@@ -264,8 +268,9 @@ class null_instagram_widget extends WP_Widget {
 
 	function images_only( $media_item ) {
 
-		if ( $media_item['type'] == 'image' )
+		if ( 'image' === $media_item['type'] ) {
 			return true;
+		}
 
 		return false;
 	}
