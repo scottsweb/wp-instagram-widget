@@ -113,6 +113,7 @@ Class null_instagram_widget extends WP_Widget {
 		}
 
 		$linkclass = apply_filters( 'wpiw_link_class', 'clear' );
+		$linkaclass = apply_filters( 'wpiw_linka_class', '' );
 
 		switch ( substr( $username, 0, 1 ) ) {
 			case '#':
@@ -125,7 +126,7 @@ Class null_instagram_widget extends WP_Widget {
 		}
 
 		if ( '' !== $link ) {
-			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo trailingslashit( esc_url( $url ) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
+			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo trailingslashit( esc_url( $url ) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>" class="<?php echo esc_attr( $linkaclass ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
 		}
 
 		do_action( 'wpiw_after_widget', $instance );
