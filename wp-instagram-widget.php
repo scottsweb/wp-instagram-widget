@@ -114,8 +114,18 @@ Class null_instagram_widget extends WP_Widget {
 
 		$linkclass = apply_filters( 'wpiw_link_class', 'clear' );
 
+		switch ( substr( $username, 0, 1 ) ) {
+			case '#':
+				$url = '//instagram.com/explore/tags/' . str_replace( '#', '', $username );
+				break;
+
+			default:
+				$url = '//instagram.com/' . str_replace( '@', '', $username );
+				break;
+		}
+
 		if ( '' !== $link ) {
-			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo trailingslashit( '//instagram.com/' . esc_attr( trim( $username ) ) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
+			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo trailingslashit( esc_url( $url ) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
 		}
 
 		do_action( 'wpiw_after_widget', $instance );
@@ -133,7 +143,7 @@ Class null_instagram_widget extends WP_Widget {
 		$link = $instance['link'];
 		?>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" /></label></p>
-		<p><label for="<?php echo esc_attr( $this->get_field_id( 'username' ) ); ?>"><?php esc_html_e( 'Username', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'username' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'username' ) ); ?>" type="text" value="<?php echo esc_attr( $username ); ?>" /></label></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'username' ) ); ?>"><?php esc_html_e( '@username or #tag', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'username' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'username' ) ); ?>" type="text" value="<?php echo esc_attr( $username ); ?>" /></label></p>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>"><?php esc_html_e( 'Number of photos', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'number' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'number' ) ); ?>" type="text" value="<?php echo esc_attr( $number ); ?>" /></label></p>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>"><?php esc_html_e( 'Photo size', 'wp-instagram-widget' ); ?>:</label>
 			<select id="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'size' ) ); ?>" class="widefat">
@@ -168,12 +178,21 @@ Class null_instagram_widget extends WP_Widget {
 	// based on https://gist.github.com/cosmocatalano/4544576.
 	function scrape_instagram( $username ) {
 
-		$username = strtolower( $username );
-		$username = str_replace( '@', '', $username );
+		$username = trim( strtolower( $username ) );
 
 		if ( false === ( $instagram = get_transient( 'instagram-a6-' . sanitize_title_with_dashes( $username ) ) ) ) {
 
-			$remote = wp_remote_get( 'https://instagram.com/' . trim( $username ) );
+			switch ( substr( $username, 0, 1 ) ) {
+				case '#':
+					$url = 'https://instagram.com/explore/tags/' . str_replace( '#', '', $username );
+					break;
+
+				default:
+					$url = 'https://instagram.com/' . str_replace( '@', '', $username );
+					break;
+			}
+
+			$remote = wp_remote_get( $url );
 
 			if ( is_wp_error( $remote ) ) {
 				return new WP_Error( 'site_down', esc_html__( 'Unable to communicate with Instagram.', 'wp-instagram-widget' ) );
@@ -193,6 +212,8 @@ Class null_instagram_widget extends WP_Widget {
 
 			if ( isset( $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'] ) ) {
 				$images = $insta_array['entry_data']['ProfilePage'][0]['user']['media']['nodes'];
+			} else if ( isset( $insta_array['entry_data']['TagPage'][0]['tag']['media']['nodes'] ) ) {
+				$images = $insta_array['entry_data']['TagPage'][0]['tag']['media']['nodes'];
 			} else {
 				return new WP_Error( 'bad_json_2', esc_html__( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 			}
