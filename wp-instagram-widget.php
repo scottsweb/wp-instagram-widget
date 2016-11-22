@@ -5,7 +5,7 @@ Plugin URI: https://github.com/scottsweb/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos.
 Version: 1.9.8
 Author: Scott Evans
-Author URI: http://scott.ee
+Author URI: https://scott.ee
 Text Domain: wp-instagram-widget
 Domain Path: /assets/languages/
 License: GPLv2 or later
@@ -171,9 +171,9 @@ class null_instagram_widget extends WP_Widget {
 		$username = strtolower( $username );
 		$username = str_replace( '@', '', $username );
 
-		if ( false === ( $instagram = get_transient( 'instagram-a5-'.sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( 'instagram-a6-'.sanitize_title_with_dashes( $username ) ) ) ) {
 
-			$remote = wp_remote_get( 'http://instagram.com/'.trim( $username ) );
+			$remote = wp_remote_get( 'https://instagram.com/'.trim( $username ) );
 
 			if ( is_wp_error( $remote ) )
 				return new WP_Error( 'site_down', esc_html__( 'Unable to communicate with Instagram.', 'wp-instagram-widget' ) );
@@ -247,7 +247,7 @@ class null_instagram_widget extends WP_Widget {
 			// do not set an empty transient - should help catch private or empty accounts
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'instagram-a5-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
+				set_transient( 'instagram-a6-'.sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS*2 ) );
 			}
 		}
 
