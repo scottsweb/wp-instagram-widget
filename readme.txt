@@ -38,12 +38,13 @@ Alternatively you can search for the plugin from your WordPress dashboard and in
 
 The plugin has five filters. The first allows you adjust that cache time for retrieving the images from Instagram:
 
-`add_filter('null_instagram_cache_time', 'my_cache_time');
+```php
+add_filter('null_instagram_cache_time', 'my_cache_time');
 
 function my_cache_time() {
 	return HOUR_IN_SECONDS;
 }
-`
+```
 
 The second allows you to filter video results from the widget:
 
