@@ -177,11 +177,12 @@ Class null_instagram_widget extends WP_Widget {
 	}
 
 	// based on https://gist.github.com/cosmocatalano/4544576.
-	function scrape_instagram( $username ) {
+	function scrape_instagram( $username, $max_id = null ) {
 
 		$username = trim( strtolower( $username ) );
+		$max_id   = (int)$max_id;
 
-		$transient_key = 'instagram-a6-'.sanitize_title_with_dashes( $username );
+		$transient_key = 'instagram-a6-'.sanitize_title_with_dashes( $username ).'-max-id-'.$max_id;
 
 		if ( false === ( $instagram = get_transient( $transient_key ) ) ) {
 
@@ -193,6 +194,10 @@ Class null_instagram_widget extends WP_Widget {
 				default:
 					$url = 'https://instagram.com/' . str_replace( '@', '', $username );
 					break;
+			}
+
+			if ( $max_id ) {
+				$url .= '?max_id='.$max_id;
 			}
 
 			$remote = wp_remote_get( $url );
@@ -268,6 +273,7 @@ Class null_instagram_widget extends WP_Widget {
 					'small'			=> $image['small'],
 					'large'			=> $image['large'],
 					'original'		=> $image['display_src'],
+					'id'			=> $image['id'],
 					'type'		  	=> $type,
 				);
 			} // End foreach().
