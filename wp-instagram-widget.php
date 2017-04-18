@@ -181,7 +181,9 @@ Class null_instagram_widget extends WP_Widget {
 
 		$username = trim( strtolower( $username ) );
 
-		if ( false === ( $instagram = get_transient( 'instagram-a6-' . sanitize_title_with_dashes( $username ) ) ) ) {
+		$transient_key = 'instagram-a6-'.sanitize_title_with_dashes( $username );
+
+		if ( false === ( $instagram = get_transient( $transient_key ) ) ) {
 
 			switch ( substr( $username, 0, 1 ) ) {
 				case '#':
@@ -273,7 +275,7 @@ Class null_instagram_widget extends WP_Widget {
 			// do not set an empty transient - should help catch private or empty accounts.
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'instagram-a6-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 2 ) );
+				set_transient( $transient_key, $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 2 ) );
 			}
 		}
 
