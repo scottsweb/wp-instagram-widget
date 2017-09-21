@@ -2,7 +2,7 @@
 Contributors: scottsweb, codeforthepeople
 Tags: instagram, widget, photos, photography, hipster, sidebar, widgets, simple
 Requires at least: 4.4
-Tested up to: 4.5
+Tested up to: 4.8.2
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -54,6 +54,7 @@ The rest allow you to add custom classes to each list item, link or image:
 `add_filter( 'wpiw_item_class', 'my_instagram_class' );
 add_filter( 'wpiw_a_class', 'my_instagram_class' );
 add_filter( 'wpiw_img_class', 'my_instagram_class' );
+add_filter( 'wpiw_linka_class', 'my_instagram_class' );
 
 function my_instagram_class( $classes ) {
 	$classes = "instagram-image";
@@ -76,6 +77,12 @@ In version 1.9.6 you can now use a filter to change the location of your custom 
 2. Instagram widget in the theme customiser
 
 == Changelog ==
+
+= 2.0.0 =
+* Ability to track tags / hashtags instead of just usernames (e.g. #cheese)
+* New filter for custom link class
+* Bundle German language (props jensteichert)
+* Other minor fixes and formatting 
 
 = 1.9.8 =
 * Return more items when using filter for images only
