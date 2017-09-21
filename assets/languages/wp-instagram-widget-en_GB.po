@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WP Instagram Widget\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-25 08:13-0000\n"
-"PO-Revision-Date: 2015-09-25 08:13-0000\n"
+"POT-Creation-Date: 2017-09-21 10:19+0100\n"
+"PO-Revision-Date: 2017-09-21 10:19+0100\n"
 "Last-Translator: Scott Evans @scottsweb <translate@scott.ee>\n"
 "Language-Team: @scottsweb <translate@scott.ee>\n"
 "Language: en_GB\n"
@@ -14,88 +14,88 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_x;esc_html_e;esc_html__;esc_attr_e;esc_attr__;"
 "_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_x:1,2c;_n:1,2;_n_noop:1,2;"
 "__ngettext_noop:1,2;_c,_nc:4c,1,2\n"
-"X-Poedit-Basepath: ../../\n"
+"X-Poedit-Basepath: ../..\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Generator: Poedit 1.6.10\n"
+"X-Generator: Poedit 2.0.1\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: wp-instagram-widget.php:53 wp-instagram-widget.php:117
+#: wp-instagram-widget.php:53 wp-instagram-widget.php:138
 msgid "Instagram"
 msgstr ""
 
-#: wp-instagram-widget.php:54
+#: wp-instagram-widget.php:56
 msgid "Displays your latest Instagram photos"
 msgstr ""
 
-#: wp-instagram-widget.php:117
+#: wp-instagram-widget.php:138
 msgid "Follow Me!"
 msgstr ""
 
-#: wp-instagram-widget.php:125
+#: wp-instagram-widget.php:146
 msgid "Title"
 msgstr ""
 
-#: wp-instagram-widget.php:126
-msgid "Username"
+#: wp-instagram-widget.php:147
+msgid "@username or #tag"
 msgstr ""
 
-#: wp-instagram-widget.php:127
+#: wp-instagram-widget.php:148
 msgid "Number of photos"
 msgstr ""
 
-#: wp-instagram-widget.php:128
+#: wp-instagram-widget.php:149
 msgid "Photo size"
 msgstr ""
 
-#: wp-instagram-widget.php:130
+#: wp-instagram-widget.php:151
 msgid "Thumbnail"
 msgstr ""
 
-#: wp-instagram-widget.php:131
+#: wp-instagram-widget.php:152
 msgid "Small"
 msgstr ""
 
-#: wp-instagram-widget.php:132
+#: wp-instagram-widget.php:153
 msgid "Large"
 msgstr ""
 
-#: wp-instagram-widget.php:133
+#: wp-instagram-widget.php:154
 msgid "Original"
 msgstr ""
 
-#: wp-instagram-widget.php:136
+#: wp-instagram-widget.php:157
 msgid "Open links in"
 msgstr ""
 
-#: wp-instagram-widget.php:138
+#: wp-instagram-widget.php:159
 msgid "Current window (_self)"
 msgstr ""
 
-#: wp-instagram-widget.php:139
+#: wp-instagram-widget.php:160
 msgid "New window (_blank)"
 msgstr ""
 
-#: wp-instagram-widget.php:142
+#: wp-instagram-widget.php:163
 msgid "Link text"
 msgstr ""
 
-#: wp-instagram-widget.php:169
+#: wp-instagram-widget.php:199
 msgid "Unable to communicate with Instagram."
 msgstr ""
 
-#: wp-instagram-widget.php:172
+#: wp-instagram-widget.php:203
 msgid "Instagram did not return a 200."
 msgstr ""
 
-#: wp-instagram-widget.php:179 wp-instagram-widget.php:184
-#: wp-instagram-widget.php:188
+#: wp-instagram-widget.php:211 wp-instagram-widget.php:219
+#: wp-instagram-widget.php:223
 msgid "Instagram has returned invalid data."
 msgstr ""
 
-#: wp-instagram-widget.php:206
+#: wp-instagram-widget.php:254
 msgid "Instagram Image"
 msgstr ""
 
-#: wp-instagram-widget.php:239
+#: wp-instagram-widget.php:286
 msgid "Instagram did not return any images."
 msgstr ""
