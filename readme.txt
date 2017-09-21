@@ -120,7 +120,7 @@ In version 1.9.6 you can now use a filter to change the location of your custom 
 * Apologies for all the recent updates, all good things though!
 * Update plugin text domain ready for translate.wordpress.org
 * Introduce an 'original' image size if you want to use non-square originals
-* Introduce new filter for <ul> class `wpiw_list_class`
+* Introduce new filter for `<ul>` class `wpiw_list_class`
 
 = 1.8 =
 * Bring back image captions
