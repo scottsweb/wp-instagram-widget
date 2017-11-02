@@ -40,6 +40,11 @@ function wpiw_init() {
 }
 add_action( 'init', 'wpiw_init' );
 
+function wpiw_gutenberg_block() {
+	wp_enqueue_script( 'wpiw-block', WP_INSTAGRAM_WIDGET_JS_URL . '/wpiw-block.js', array( 'wp-blocks', 'wp-element' ) );
+}
+add_action( 'enqueue_block_editor_assets', 'wpiw_gutenberg_block' );
+
 function wpiw_widget() {
 	register_widget( 'null_instagram_widget' );
 }
