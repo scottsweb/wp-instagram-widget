@@ -67,6 +67,7 @@ Class null_instagram_widget extends WP_Widget {
 		$size = empty( $instance['size'] ) ? 'large' : $instance['size'];
 		$target = empty( $instance['target'] ) ? '_self' : $instance['target'];
 		$link = empty( $instance['link'] ) ? '' : $instance['link'];
+		$reverse = empty( $instance['reverse'] ) ? false : ($instance['reverse'] == 'on') ? true : false;
 
 		echo $args['before_widget'];
 
@@ -91,6 +92,11 @@ Class null_instagram_widget extends WP_Widget {
 
 				// slice list down to required limit.
 				$media_array = array_slice( $media_array, 0, $limit );
+
+				// reversed media
+				if ($reverse) {
+					$media_array = array_reverse($media_array);
+				}
 
 				// filters for custom classes.
 				$ulclass = apply_filters( 'wpiw_list_class', 'instagram-pics instagram-size-' . $size );
@@ -142,6 +148,7 @@ Class null_instagram_widget extends WP_Widget {
 		$size = $instance['size'];
 		$target = $instance['target'];
 		$link = $instance['link'];
+		$reverse = $instance['reverse'];
 		?>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" /></label></p>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'username' ) ); ?>"><?php esc_html_e( '@username or #tag', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'username' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'username' ) ); ?>" type="text" value="<?php echo esc_attr( $username ); ?>" /></label></p>
@@ -161,6 +168,13 @@ Class null_instagram_widget extends WP_Widget {
 			</select>
 		</p>
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'link' ) ); ?>"><?php esc_html_e( 'Link text', 'wp-instagram-widget' ); ?>: <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'link' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'link' ) ); ?>" type="text" value="<?php echo esc_attr( $link ); ?>" /></label></p>
+		<p>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'reverse' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'reverse' ) ); ?>" type="checkbox" <?php echo ($reverse) ? 'checked' : ''; ?>/>
+				&nbsp;
+				<label for="<?php echo esc_attr( $this->get_field_id( 'reverse' ) ); ?>">
+					<?php esc_html_e( 'Use reverse media', 'wp-instagram-widget' ); ?>
+				</label>
+		</p>
 		<?php
 
 	}
@@ -173,6 +187,7 @@ Class null_instagram_widget extends WP_Widget {
 		$instance['size'] = ( ( 'thumbnail' === $new_instance['size'] || 'large' === $new_instance['size'] || 'small' === $new_instance['size'] || 'original' === $new_instance['size'] ) ? $new_instance['size'] : 'large' );
 		$instance['target'] = ( ( '_self' === $new_instance['target'] || '_blank' === $new_instance['target'] ) ? $new_instance['target'] : '_self' );
 		$instance['link'] = strip_tags( $new_instance['link'] );
+		$instance['reverse'] = strip_tags( $new_instance['reverse'] );
 		return $instance;
 	}
 
