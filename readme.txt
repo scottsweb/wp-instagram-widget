@@ -49,9 +49,11 @@ The second allows you to filter video results from the widget:
 
 `add_filter('wpiw_images_only', '__return_true');`
 
-The rest allow you to add custom classes to each list item, link or image:
+The rest allow you to add custom classes to the [ul] list container, each list item, link or image:
 
-`add_filter( 'wpiw_item_class', 'my_instagram_class' );
+`add_filter( 'wpiw_list_class', 'my_instagram_class' );
+
+add_filter( 'wpiw_item_class', 'my_instagram_class' );
 add_filter( 'wpiw_a_class', 'my_instagram_class' );
 add_filter( 'wpiw_img_class', 'my_instagram_class' );
 add_filter( 'wpiw_linka_class', 'my_instagram_class' );
