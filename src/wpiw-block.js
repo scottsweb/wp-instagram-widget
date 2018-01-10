@@ -3,12 +3,17 @@ const {
 	registerBlockType,
 	Editable,
 	BlockControls,
-	AlignmentToolbar,
+	BlockAlignmentToolbar,
 	InspectorControls,
 	BlockDescription,
+	RangeControl,
 	Toolbar,
 	source: { children }
 } = wp.blocks;
+
+const MIN_POSTS = 1;
+const MAX_POSTS = 12;
+const MAX_POSTS_COLUMNS = 6;
 
 registerBlockType( 'wpiw/instagram-feed', {
 	title: __( 'Instagram Feed' ),
@@ -34,20 +39,21 @@ registerBlockType( 'wpiw/instagram-feed', {
 	edit: props => {
 		var content = props.attributes.content,
 			align = props.attributes.align,
-			focus = props.focus;
-			layout = props.attributes.layout;
+			focus = props.focus,
+			layout = props.attributes.layout,
+			columns = props.attributes.columns;
 
 		const layoutControls = [
 			{
 				icon: 'list-view',
 				title: __( 'List View' ),
-				//onClick: () => setAttributes( { layout: 'list' } ),
+				onClick: () => setAttributes( { layout: 'list' } ),
 				isActive: layout === 'list',
 			},
 			{
 				icon: 'grid-view',
 				title: __( 'Grid View' ),
-				//onClick: () => setAttributes( { layout: 'grid' } ),
+				onClick: () => setAttributes( { layout: 'grid' } ),
 				isActive: layout === 'grid',
 			},
 		];
@@ -62,7 +68,7 @@ registerBlockType( 'wpiw/instagram-feed', {
 				// toolbar controls
 				!! focus && (
 						<BlockControls key="controls">
-							<AlignmentToolbar
+							<BlockAlignmentToolbar
 								value={ align }
 								onChange={ onChangeAlignment }
 								controls={ [ 'center', 'wide', 'full' ] }
@@ -77,6 +83,13 @@ registerBlockType( 'wpiw/instagram-feed', {
 						<BlockDescription>
 							<p>{ __( 'Shows your latest Instagram images.' ) }</p>
 						</BlockDescription>
+						<RangeControl
+							label={ __( 'Columns' ) }
+							value={ columns }
+							onChange={ ( value ) => setAttributes( { columns: value } ) }
+							min={ 1 }
+							max={ MAX_POSTS_COLUMNS }
+						/>
 					</InspectorControls>
 					)	
 					

@@ -65,19 +65,27 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-const { __ } = wp.i18n;
-const {
-	registerBlockType,
-	Editable,
-	BlockControls,
-	AlignmentToolbar,
-	InspectorControls,
-	BlockDescription,
-	Toolbar,
-	source: { children }
-} = wp.blocks;
+"use strict";
+
+
+var __ = wp.i18n.__;
+var _wp$blocks = wp.blocks,
+    registerBlockType = _wp$blocks.registerBlockType,
+    Editable = _wp$blocks.Editable,
+    BlockControls = _wp$blocks.BlockControls,
+    BlockAlignmentToolbar = _wp$blocks.BlockAlignmentToolbar,
+    InspectorControls = _wp$blocks.InspectorControls,
+    BlockDescription = _wp$blocks.BlockDescription,
+    RangeControl = _wp$blocks.RangeControl,
+    Toolbar = _wp$blocks.Toolbar,
+    children = _wp$blocks.source.children;
+
+
+var MIN_POSTS = 1;
+var MAX_POSTS = 12;
+var MAX_POSTS_COLUMNS = 6;
 
 registerBlockType('wpiw/instagram-feed', {
 	title: __('Instagram Feed'),
@@ -100,21 +108,26 @@ registerBlockType('wpiw/instagram-feed', {
  		}
  	},*/
 
-	edit: props => {
+	edit: function edit(props) {
 		var content = props.attributes.content,
 		    align = props.attributes.align,
-		    focus = props.focus;
-		layout = props.attributes.layout;
+		    focus = props.focus,
+		    layout = props.attributes.layout,
+		    columns = props.attributes.columns;
 
-		const layoutControls = [{
+		var layoutControls = [{
 			icon: 'list-view',
 			title: __('List View'),
-			//onClick: () => setAttributes( { layout: 'list' } ),
+			onClick: function onClick() {
+				return setAttributes({ layout: 'list' });
+			},
 			isActive: layout === 'list'
 		}, {
 			icon: 'grid-view',
 			title: __('Grid View'),
-			//onClick: () => setAttributes( { layout: 'grid' } ),
+			onClick: function onClick() {
+				return setAttributes({ layout: 'grid' });
+			},
 			isActive: layout === 'grid'
 		}];
 
@@ -130,7 +143,7 @@ registerBlockType('wpiw/instagram-feed', {
 			!!focus && React.createElement(
 				BlockControls,
 				{ key: 'controls' },
-				React.createElement(AlignmentToolbar, {
+				React.createElement(BlockAlignmentToolbar, {
 					value: align,
 					onChange: onChangeAlignment,
 					controls: ['center', 'wide', 'full']
@@ -149,7 +162,16 @@ registerBlockType('wpiw/instagram-feed', {
 						null,
 						__('Shows your latest Instagram images.')
 					)
-				)
+				),
+				React.createElement(RangeControl, {
+					label: __('Columns'),
+					value: columns,
+					onChange: function onChange(value) {
+						return setAttributes({ columns: value });
+					},
+					min: 1,
+					max: MAX_POSTS_COLUMNS
+				})
 			),
 			React.createElement(
 				'ul',
@@ -168,8 +190,9 @@ registerBlockType('wpiw/instagram-feed', {
 		);
 	},
 
-	save: props => {
-		const { attributes: { title } } = props;
+	save: function save(props) {
+		var title = props.attributes.title;
+
 		return React.createElement(
 			'h1',
 			null,
