@@ -84,97 +84,100 @@ In version 1.9.6 you can now use a filter to change the location of your custom 
 
 ## Changelog
 
-####2.0.0
+#### 2.0.1
+* Fix hashtag support
+
+#### 2.0.0
 * Ability to track tags / hashtags instead of just usernames (e.g. #cheese)
 * New filter for custom link class
 * Bundle German language (props jensteichert)
 * Other minor fixes and formatting 
 
-####1.9.8
+#### 1.9.8
 * Return more items when using filter for images only
 
-####1.9.7
+#### 1.9.7
 * Fix double trailing slash on custom text link
 
-####1.9.6
+#### 1.9.6
 * Trailing slash all URLs to support Instagram app on iOS
 * Support selective refresh in 4.5
 * New filter for `wpiw_template_part`
 
-####1.9.5
+#### 1.9.5
 * Another fix for image URL handling, I think we have all the edge cases now!
 
-####1.9.4
+#### 1.9.4
 * IMPORTANT: You must be on WordPress 4.4 or later to upgrade to this version of the plugin. This fixes a bug with PHP versions < 5.4.7. If you are on a version of WordPress older than 4.4 and you notice images are not loading then I recommend rolling your version of the widget back to this version: https://github.com/scottsweb/wp-instagram-widget/blob/c66550eded59bd51f508f304a85a3e031ac4044c/wp-instagram-widget.php
 
-####1.9.3
+#### 1.9.3
 * Fix issues introduced in the last version (apologies). Certain CDN URLs are still in use
 
-####1.9.2
+#### 1.9.2
 * Better handling of all image and video image URLs props @thegallagher
 
-####1.9.1
+#### 1.9.1
 * Fix bug with some image URLs
 
-####1.9
+#### 1.9
 * WordPress.com VIP checked
 * Updated CDN matching to ensure correct image sizes are served at all times
 * Shortened the transient key - should mean we bump into the character limit less often
 * Remove use of `extract`
 
-####1.8.1
+#### 1.8.1
 * Apologies for all the recent updates, all good things though!
 * Update plugin text domain ready for translate.wordpress.org
 * Introduce an 'original' image size if you want to use non-square originals
 * Introduce new filter for `<ul>` class `wpiw_list_class`
 
-####1.8
+#### 1.8
 * Bring back image captions
 * Fix small PHP error in 1.7
 
-####1.7
+#### 1.7
 * Bring back image sizes
 * Use thumbnails that are square (originals are in the data returned and can be used)
 * Remove @ from usernames
 
-####1.6
+#### 1.6
 * Compatibility with 4.3
 
-####1.5.1
+#### 1.5.1
 * Invalidate old transients
 
-####1.5
+#### 1.5
 * Remove null framework support
 * Fix breaking change by Instagram whilst maintaining old style support
 * Remove thumbnail size option
 
-####1.4
+#### 1.4
 * Introduce class filters
 * Only set a transient if images are returned
 * Optional template part for complete output control
 
-####1.3.1
+#### 1.3.1
 * Force lowercase usernames
 * Correct hook name
 
-####1.3
+#### 1.3
 * Option to open links in new window
 * Support for video items (with filter to disable this)
 * New actions for adding custom output to the widget
 * Support for https://
 * Correctly escape attributes
 
-####1.2.1
+#### 1.2.1
 * Change transient name due to data change
 
-####1.2
+#### 1.2
 * Better error handling
 * Encode emoji as they cause transient issues
 
-####1.1
+#### 1.1
 * Fix issue with Instagram feed
 * Add composer.json
 
-####1.0
+#### 1.0
 * Initial release
 
