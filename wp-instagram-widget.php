@@ -3,7 +3,7 @@
 Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/scottsweb/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos.
-Version: 2.0.1
+Version: 2.0.2
 Author: Scott Evans
 Author URI: https://scott.ee
 Text Domain: wp-instagram-widget
@@ -233,7 +233,8 @@ Class null_instagram_widget extends WP_Widget {
 			$instagram = array();
 
 			foreach ( $images as $image ) {
-				// the hashtag json is now completely different
+				// Note: keep hashtag support different until these JSON changes stabalise
+				// these are mostly the same again now
 				switch ( substr( $username, 0, 1 ) ) {
 					case '#':
 						if ( true === $image['node']['is_video'] ) {

@@ -84,6 +84,9 @@ In version 1.9.6 you can now use a filter to change the location of your custom 
 
 ## Changelog
 
+#### 2.0.2
+* Use image sizes from JSON due to errors loading images
+
 #### 2.0.1
 * Fix hashtag support
 
