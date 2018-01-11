@@ -3,7 +3,7 @@
 Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/scottsweb/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos.
-Version: 2.0.1
+Version: 2.0.2
 Author: Scott Evans
 Author URI: https://scott.ee
 Text Domain: wp-instagram-widget
@@ -188,7 +188,7 @@ Class null_instagram_widget extends WP_Widget {
 
 		$username = trim( strtolower( $username ) );
 
-		if ( false === ( $instagram = get_transient( 'instagram-a8-' . sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( 'instagram-a9-' . sanitize_title_with_dashes( $username ) ) ) ) {
 
 			switch ( substr( $username, 0, 1 ) ) {
 				case '#':
@@ -233,7 +233,8 @@ Class null_instagram_widget extends WP_Widget {
 			$instagram = array();
 
 			foreach ( $images as $image ) {
-				// the hashtag json is now completely different
+				// Note: keep hashtag support different until these JSON changes stabalise
+				// these are mostly the same again now
 				switch ( substr( $username, 0, 1 ) ) {
 					case '#':
 						if ( true === $image['node']['is_video'] ) {
@@ -253,7 +254,7 @@ Class null_instagram_widget extends WP_Widget {
 							'time'		  	=> $image['node']['taken_at_timestamp'],
 							'comments'	  	=> $image['node']['edge_media_to_comment']['count'],
 							'likes'		 	=> $image['node']['edge_liked_by']['count'],
-							'thumbnail'	 	=> str_replace( 's150x150', 's160x160', preg_replace( '/^https?\:/i', '', $image['node']['thumbnail_resources'][0]['src'] ) ),
+							'thumbnail'	 	=> preg_replace( '/^https?\:/i', '', $image['node']['thumbnail_resources'][0]['src'] ),
 							'small'			=> preg_replace( '/^https?\:/i', '', $image['node']['thumbnail_resources'][2]['src'] ),
 							'large'			=> preg_replace( '/^https?\:/i', '', $image['node']['thumbnail_resources'][4]['src'] ),
 							'original'		=> preg_replace( '/^https?\:/i', '', $image['node']['display_url'] ),
@@ -261,24 +262,6 @@ Class null_instagram_widget extends WP_Widget {
 						);
 						break;
 					default:
-						$image['thumbnail_src'] = preg_replace( '/^https?\:/i', '', $image['thumbnail_src'] );
-						$image['display_src'] = preg_replace( '/^https?\:/i', '', $image['display_src'] );
-
-						// handle both types of CDN url.
-						if ( ( strpos( $image['thumbnail_src'], 's640x640' ) !== false ) ) {
-							$image['thumbnail'] = str_replace( 's640x640', 's160x160', $image['thumbnail_src'] );
-							$image['small'] = str_replace( 's640x640', 's320x320', $image['thumbnail_src'] );
-						} else {
-							$urlparts = wp_parse_url( $image['thumbnail_src'] );
-							$pathparts = explode( '/', $urlparts['path'] );
-							array_splice( $pathparts, 3, 0, array( 's160x160' ) );
-							$image['thumbnail'] = '//' . $urlparts['host'] . implode( '/', $pathparts );
-							$pathparts[3] = 's320x320';
-							$image['small'] = '//' . $urlparts['host'] . implode( '/', $pathparts );
-						}
-
-						$image['large'] = $image['thumbnail_src'];
-
 						if ( true === $image['is_video'] ) {
 							$type = 'video';
 						} else {
@@ -296,10 +279,10 @@ Class null_instagram_widget extends WP_Widget {
 							'time'		  	=> $image['date'],
 							'comments'	  	=> $image['comments']['count'],
 							'likes'		 	=> $image['likes']['count'],
-							'thumbnail'	 	=> $image['thumbnail'],
-							'small'			=> $image['small'],
-							'large'			=> $image['large'],
-							'original'		=> $image['display_src'],
+							'thumbnail'	 	=> preg_replace( '/^https?\:/i', '', $image['thumbnail_resources'][0]['src'] ),
+							'small'			=> preg_replace( '/^https?\:/i', '', $image['thumbnail_resources'][2]['src'] ),
+							'large'			=> preg_replace( '/^https?\:/i', '', $image['thumbnail_resources'][4]['src'] ),
+							'original'		=> preg_replace( '/^https?\:/i', '', $image['display_src'] ),
 							'type'		  	=> $type,
 						);
 
@@ -310,7 +293,7 @@ Class null_instagram_widget extends WP_Widget {
 			// do not set an empty transient - should help catch private or empty accounts.
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'instagram-a8-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 2 ) );
+				set_transient( 'instagram-a9-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 2 ) );
 			}
 		}
 
