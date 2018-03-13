@@ -84,6 +84,10 @@ In version 1.9.6 you can now use a filter to change the location of your custom 
 
 ## Changelog
 
+#### 2.0.3
+* New JSON on the Instagram end, fixes broken usernames
+* Support same tag and username
+
 #### 2.0.2
 * Use image sizes from JSON due to errors loading images
 

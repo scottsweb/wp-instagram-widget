@@ -2,7 +2,7 @@
 Contributors: scottsweb, codeforthepeople
 Tags: instagram, widget, photos, photography, hipster, sidebar, widgets, simple
 Requires at least: 4.4
-Tested up to: 4.9.1
+Tested up to: 4.9.4
 Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -79,6 +79,10 @@ In version 1.9.6 you can now use a filter to change the location of your custom 
 2. Instagram widget in the theme customiser
 
 == Changelog ==
+
+= 2.0.3 =
+* New JSON on the Instagram end, fixes broken usernames
+* Support same tag and username
 
 = 2.0.2 =
 * Use image sizes from JSON due to errors loading images
