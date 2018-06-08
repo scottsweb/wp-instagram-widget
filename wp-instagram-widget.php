@@ -105,7 +105,11 @@ Class null_instagram_widget extends WP_Widget {
 					if ( locate_template( $template_part ) !== '' ) {
 						include locate_template( $template_part );
 					} else {
-						echo '<li class="' . esc_attr( $liclass ) . '"><a href="' . esc_url( $item['link'] ) . '" target="' . esc_attr( $target ) . '"  class="' . esc_attr( $aclass ) . '"><img src="' . esc_url( $item[$size] ) . '"  alt="' . esc_attr( $item['description'] ) . '" title="' . esc_attr( $item['description'] ) . '"  class="' . esc_attr( $imgclass ) . '"/></a></li>';
+						if($item['type'] == 'video') {
+							echo '<li class="' . esc_attr( $liclass ) . '"><a href="' . esc_url( $item['link'] ) . '" target="' . esc_attr( $target ) . '"  class="' . esc_attr( $aclass ) . '" data-video-url="' . esc_url( $item['video_url'] ) . '"><img src="' . esc_url( $item[$size] ) . '"  alt="' . esc_attr( $item['description'] ) . '" title="' . esc_attr( $item['description'] ) . '"  class="' . esc_attr( $imgclass ) . '"/></a></li>';
+						} else {
+							echo '<li class="' . esc_attr( $liclass ) . '"><a href="' . esc_url( $item['link'] ) . '" target="' . esc_attr( $target ) . '"  class="' . esc_attr( $aclass ) . '"><img src="' . esc_url( $item[$size] ) . '"  alt="' . esc_attr( $item['description'] ) . '" title="' . esc_attr( $item['description'] ) . '"  class="' . esc_attr( $imgclass ) . '"/></a></li>';
+						}
 					}
 				}
 				?></ul><?php
@@ -235,10 +239,14 @@ Class null_instagram_widget extends WP_Widget {
 			$instagram = array();
 
 			foreach ( $images as $image ) {
+				$link = trailingslashit( '//instagram.com/p/' . $image['node']['shortcode'] );
+
 				if ( true === $image['node']['is_video'] ) {
 					$type = 'video';
+					$video_url = $this->scrape_instagram_video($link);
 				} else {
 					$type = 'image';
+					$video_url = '';
 				}
 
 				$caption = __( 'Instagram Image', 'wp-instagram-widget' );
@@ -248,7 +256,7 @@ Class null_instagram_widget extends WP_Widget {
 
 				$instagram[] = array(
 					'description' => $caption,
-					'link'        => trailingslashit( '//instagram.com/p/' . $image['node']['shortcode'] ),
+					'link'        => $link,
 					'time'        => $image['node']['taken_at_timestamp'],
 					'comments'    => $image['node']['edge_media_to_comment']['count'],
 					'likes'       => $image['node']['edge_liked_by']['count'],
@@ -257,6 +265,7 @@ Class null_instagram_widget extends WP_Widget {
 					'large'       => preg_replace( '/^https?\:/i', '', $image['node']['thumbnail_resources'][4]['src'] ),
 					'original'    => preg_replace( '/^https?\:/i', '', $image['node']['display_url'] ),
 					'type'        => $type,
+					'video_url'   => preg_replace( '/^https?\:/i', '', $video_url ),
 				);
 			} // End foreach().
 
@@ -275,6 +284,33 @@ Class null_instagram_widget extends WP_Widget {
 
 			return new WP_Error( 'no_images', esc_html__( 'Instagram did not return any images.', 'wp-instagram-widget' ) );
 
+		}
+	}
+
+	function scrape_instagram_video( $media_link ) {
+		$media_url = 'https:' . $media_link;
+		$remote = wp_remote_get( $media_url );
+
+		if ( is_wp_error( $remote ) ) {
+			return '';
+		}
+
+		if ( 200 !== wp_remote_retrieve_response_code( $remote ) ) {
+			return '';
+		}
+
+		$media_shards      = explode( 'window._sharedData = ', $remote['body'] );
+		$media_insta_json  = explode( ';</script>', $media_shards[1] );
+		$media_insta_array = json_decode( $media_insta_json[0], true );
+
+		if ( ! $media_insta_array ) {
+			return '';
+		}
+
+		if ( isset( $media_insta_array['entry_data']['PostPage'][0]['graphql']['shortcode_media']['video_url'] ) ) {
+			return $media_insta_array['entry_data']['PostPage'][0]['graphql']['shortcode_media']['video_url'];
+		} else {
+			return '';
 		}
 	}
 
