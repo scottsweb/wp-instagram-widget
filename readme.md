@@ -1,4 +1,4 @@
-![WP Instagram Widget](http://cloud.scott.ee/images/wp-instagram-widget.png)
+![WP Instagram Widget](https://scott.ee/images/wp-instagram-widget.png)
 
 # WP Instagram Widget
 
