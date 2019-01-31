@@ -90,7 +90,7 @@ Class null_instagram_widget extends WP_Widget {
 				}
 
 				// slice list down to required limit.
-				$media_array = array_slice( $media_array, 0, $limit );
+				$media_array = array_slice( apply_filters( 'wpiw_media_array', $media_array ), 0, $limit );
 
 				// filters for custom classes.
 				$ulclass = apply_filters( 'wpiw_list_class', 'instagram-pics instagram-size-' . $size );
