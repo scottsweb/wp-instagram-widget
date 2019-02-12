@@ -183,24 +183,63 @@ Class null_instagram_widget extends WP_Widget {
 		return $instance;
 	}
 
-	// based on https://gist.github.com/cosmocatalano/4544576.
+	/**
+	 * Scrape from instagram while handling errors gracefully to prevent a flood.
+	 * 
+	 * @param string $username
+	 * @return WP_Error|array
+	 */
 	function scrape_instagram( $username ) {
 
 		$username = trim( strtolower( $username ) );
 
+		// Return errors, or previously cached data, if any throttled errors exist.
+		if (true !== ( $cache_or_errors = $this->_throttle_errors( $username ) ) ) {
+			return $cache_or_errors;
+		}
+
+		$result = $this->_scrape_instagram( $username );
+
+		if ( is_wp_error( $result ) ) {
+			set_transient( 'insta-a10-errors-throttle', $result, 30 );
+			return $this->_throttle_errors( $username );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * If errors' been registered (a 30 sec default throttle), deliver previously 
+	 * successful results (if ever recorded), or return stored WP_Error object.
+	 */
+	function _throttle_errors( $username ) {
+
+		$throttled_errors = get_transient( 'insta-a10-errors-throttle' );
+		if ( ! $throttled_errors ) {
+			return true;
+		}
+
+		$previous_results = get_transient(
+			$this->get_transient_id( $username )
+		);
+
+		return $previous_results ? unserialize( base64_decode( $previous_results ) ) : $throttled_errors;
+	}
+
+	// based on https://gist.github.com/cosmocatalano/4544576.
+	function _scrape_instagram( $username ) {
+
 		switch ( substr( $username, 0, 1 ) ) {
 			case '#':
-				$url              = 'https://instagram.com/explore/tags/' . str_replace( '#', '', $username );
-				$transient_prefix = 'h';
+				$url  = 'https://instagram.com/explore/tags/' . str_replace( '#', '', $username );
 				break;
 
 			default:
-				$url              = 'https://instagram.com/' . str_replace( '@', '', $username );
-				$transient_prefix = 'u';
+				$url  = 'https://instagram.com/' . str_replace( '@', '', $username );
 				break;
 		}
 
-		if ( false === ( $instagram = get_transient( 'insta-a10-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( $this->get_transient_id( $username ) ) ) ) {
 
 			$remote = wp_remote_get( $url );
 
@@ -263,7 +302,7 @@ Class null_instagram_widget extends WP_Widget {
 			// do not set an empty transient - should help catch private or empty accounts.
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'insta-a10-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 2 ) );
+				set_transient( $this->get_transient_id( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 2 ) );
 			}
 		}
 
@@ -278,6 +317,27 @@ Class null_instagram_widget extends WP_Widget {
 		}
 	}
 
+	/**
+	 * Gets transient id we use for caches.
+	 * 
+	 * @param string $username
+	 * @return string
+	 */
+	function get_transient_id( $username ) {
+
+		switch ( substr( $username, 0, 1 ) ) {
+			case '#':
+				$transient_prefix = 'h';
+				break;
+
+			default:
+				$transient_prefix = 'u';
+				break;
+		}
+
+		return 'insta-a10-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username );
+	}
+	
 	function images_only( $media_item ) {
 
 		if ( 'image' === $media_item['type'] ) {
