@@ -68,9 +68,13 @@ Class null_instagram_widget extends WP_Widget {
 		$target = empty( $instance['target'] ) ? '_self' : $instance['target'];
 		$link = empty( $instance['link'] ) ? '' : $instance['link'];
 
-		echo $args['before_widget'];
+		$output = '';
 
-		if ( ! empty( $title ) ) { echo $args['before_title'] . wp_kses_post( $title ) . $args['after_title']; };
+		$output .= $args['before_widget'];
+
+		if ( ! empty( $title ) ) {
+			$output .= $args['before_title'] . wp_kses_post( $title ) . $args['after_title'];
+		};
 
 		do_action( 'wpiw_before_widget', $instance );
 
@@ -80,7 +84,7 @@ Class null_instagram_widget extends WP_Widget {
 
 			if ( is_wp_error( $media_array ) ) {
 
-				echo wp_kses_post( $media_array->get_error_message() );
+				$output .= wp_kses_post( $media_array->get_error_message() );
 
 			} else {
 
@@ -90,7 +94,7 @@ Class null_instagram_widget extends WP_Widget {
 				}
 
 				// slice list down to required limit.
-				$media_array = array_slice( apply_filters( 'wpiw_media_array', $media_array ), 0, $limit );
+				$media_array = array_slice( $media_array, 0, $limit );
 
 				// filters for custom classes.
 				$ulclass = apply_filters( 'wpiw_list_class', 'instagram-pics instagram-size-' . $size );
@@ -99,16 +103,16 @@ Class null_instagram_widget extends WP_Widget {
 				$imgclass = apply_filters( 'wpiw_img_class', '' );
 				$template_part = apply_filters( 'wpiw_template_part', 'parts/wp-instagram-widget.php' );
 
-				?><ul class="<?php echo esc_attr( $ulclass ); ?>"><?php
+				$output .= '<ul class="' . esc_attr( $ulclass ) . '">';
 				foreach( $media_array as $item ) {
 					// copy the else line into a new file (parts/wp-instagram-widget.php) within your theme and customise accordingly.
 					if ( locate_template( $template_part ) !== '' ) {
-						include locate_template( $template_part );
+						$output .= include locate_template( $template_part );
 					} else {
-						echo '<li class="' . esc_attr( $liclass ) . '"><a href="' . esc_url( $item['link'] ) . '" target="' . esc_attr( $target ) . '"  class="' . esc_attr( $aclass ) . '"><img src="' . esc_url( $item[$size] ) . '"  alt="' . esc_attr( $item['description'] ) . '" title="' . esc_attr( $item['description'] ) . '"  class="' . esc_attr( $imgclass ) . '"/></a></li>';
+						$output .= '<li class="' . esc_attr( $liclass ) . '"><a href="' . esc_url( $item['link'] ) . '" target="' . esc_attr( $target ) . '"  class="' . esc_attr( $aclass ) . '"><img src="' . esc_url( $item[$size] ) . '"  alt="' . esc_attr( $item['description'] ) . '" title="' . esc_attr( $item['description'] ) . '"  class="' . esc_attr( $imgclass ) . '"/></a></li>';
 					}
 				}
-				?></ul><?php
+			$output .= '</ul>';
 			}
 		}
 
@@ -126,12 +130,16 @@ Class null_instagram_widget extends WP_Widget {
 		}
 
 		if ( '' !== $link ) {
-			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo trailingslashit( esc_url( $url ) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>" class="<?php echo esc_attr( $linkaclass ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
+			$output .= '<p class="' . esc_attr( $linkclass ) . '"><a href="' . trailingslashit( esc_url( $url ) ) .'" rel="me" target="' . esc_attr( $target ) . '" class="' . esc_attr( $linkaclass ) . '"><' . wp_kses_post( $link ) . '</a></p>';
 		}
 
 		do_action( 'wpiw_after_widget', $instance );
 
-		echo $args['after_widget'];
+		$output .= $args['after_widget'];
+
+		$output = apply_filters( 'wpiw_before_output', $output );
+
+		echo $output;
 	}
 
 	function form( $instance ) {
