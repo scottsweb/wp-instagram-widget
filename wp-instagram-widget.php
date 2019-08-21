@@ -193,12 +193,12 @@ Class null_instagram_widget extends WP_Widget {
 
 		switch ( substr( $username, 0, 1 ) ) {
 			case '#':
-				$url              = 'https://www.instagram.com/explore/tags/' . str_replace( '#', '', $username );
+				$url              = 'https://www.instagram.com/explore/tags/' . str_replace( '#', '', $username ) . '?__a=1';
 				$transient_prefix = 'h';
 				break;
 
 			default:
-				$url              = 'https://www.instagram.com/' . str_replace( '@', '', $username );
+				$url              = 'https://www.instagram.com/' . str_replace( '@', '', $username ) . '?__a=1';
 				$transient_prefix = 'u';
 				break;
 		}
@@ -217,18 +217,16 @@ Class null_instagram_widget extends WP_Widget {
 				return new WP_Error( 'invalid_response', esc_html__( 'Instagram did not return a 200.', 'wp-instagram-widget' ) );
 			}
 
-			$shards      = explode( 'window._sharedData = ', $remote['body'] );
-			$insta_json  = explode( ';</script>', $shards[1] );
-			$insta_array = json_decode( $insta_json[0], true );
+			$insta_array = json_decode( $remote['body'], true );
 
 			if ( ! $insta_array ) {
 				return new WP_Error( 'bad_json', esc_html__( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 			}
 
-			if ( isset( $insta_array['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['edges'] ) ) {
-				$images = $insta_array['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['edges'];
-			} elseif ( isset( $insta_array['entry_data']['TagPage'][0]['graphql']['hashtag']['edge_hashtag_to_media']['edges'] ) ) {
-				$images = $insta_array['entry_data']['TagPage'][0]['graphql']['hashtag']['edge_hashtag_to_media']['edges'];
+			if ( isset( $insta_array['graphql']['user']['edge_owner_to_timeline_media']['edges'] ) ) {
+				$images = $insta_array['graphql']['user']['edge_owner_to_timeline_media']['edges'];
+			} elseif ( isset( $insta_array['graphql']['hashtag']['edge_hashtag_to_media']['edges'] ) ) {
+				$images = $insta_array['graphql']['hashtag']['edge_hashtag_to_media']['edges'];
 			} else {
 				return new WP_Error( 'bad_json_2', esc_html__( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 			}
