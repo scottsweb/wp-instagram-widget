@@ -128,7 +128,7 @@ Class null_instagram_widget extends WP_Widget {
 		}
 
 		if ( '' !== $link ) {
-			$relme = ( $target === '_blank') ? 'noopener' : 'me'; 
+			$relme = ( $target === '_blank') ? 'noopener' : 'me';
 			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo trailingslashit( esc_url( $url ) ); ?>" rel="<?php echo esc_attr( $relme ); ?>" target="<?php echo esc_attr( $target ); ?>" class="<?php echo esc_attr( $linkaclass ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
 		}
 
