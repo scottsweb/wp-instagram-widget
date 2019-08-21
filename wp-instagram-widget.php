@@ -186,9 +186,16 @@ Class null_instagram_widget extends WP_Widget {
 		return $instance;
 	}
 
-	// based on https://gist.github.com/cosmocatalano/4544576.
 	function scrape_instagram( $username ) {
 		global $wp_version;
+
+		$proxies = array(
+			'https://boomproxy.com/browse.php?u=',
+			'https://us.hidester.com/proxy.php?u=',
+			'https://proxy-us1.toolur.com/browse.php?u=',
+			'https://proxy-fr1.toolur.com/browse.php?u=',
+		);
+
 		$username = trim( strtolower( $username ) );
 
 		switch ( substr( $username, 0, 1 ) ) {
@@ -201,6 +208,10 @@ Class null_instagram_widget extends WP_Widget {
 				$url              = 'https://www.instagram.com/' . str_replace( '@', '', $username ) . '?__a=1';
 				$transient_prefix = 'u';
 				break;
+		}
+
+		if ( $proxy = apply_filters( 'wpiw_proxy', false ) ) {
+			$url = $proxies[ array_rand( $proxies ) ] . urlencode( $url );
 		}
 
 		if ( false === ( $instagram = get_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ) ) ) ) {
@@ -269,7 +280,7 @@ Class null_instagram_widget extends WP_Widget {
 				set_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 3 ) );
 			} else {
 				$instagram = base64_encode( serialize( array() ) );
-				set_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', MINUTE_IN_SECONDS * 5 ) );
+				set_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', MINUTE_IN_SECONDS * 10 ) );
 			}
 		}
 
