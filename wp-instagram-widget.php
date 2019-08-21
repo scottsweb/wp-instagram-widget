@@ -119,11 +119,11 @@ Class null_instagram_widget extends WP_Widget {
 
 		switch ( substr( $username, 0, 1 ) ) {
 			case '#':
-				$url = '//instagram.com/explore/tags/' . str_replace( '#', '', $username );
+				$url = '//www.instagram.com/explore/tags/' . str_replace( '#', '', $username );
 				break;
 
 			default:
-				$url = '//instagram.com/' . str_replace( '@', '', $username );
+				$url = '//www.instagram.com/' . str_replace( '@', '', $username );
 				break;
 		}
 
@@ -188,24 +188,26 @@ Class null_instagram_widget extends WP_Widget {
 
 	// based on https://gist.github.com/cosmocatalano/4544576.
 	function scrape_instagram( $username ) {
-
+		global $wp_version;
 		$username = trim( strtolower( $username ) );
 
 		switch ( substr( $username, 0, 1 ) ) {
 			case '#':
-				$url              = 'https://instagram.com/explore/tags/' . str_replace( '#', '', $username );
+				$url              = 'https://www.instagram.com/explore/tags/' . str_replace( '#', '', $username );
 				$transient_prefix = 'h';
 				break;
 
 			default:
-				$url              = 'https://instagram.com/' . str_replace( '@', '', $username );
+				$url              = 'https://www.instagram.com/' . str_replace( '@', '', $username );
 				$transient_prefix = 'u';
 				break;
 		}
 
 		if ( false === ( $instagram = get_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ) ) ) ) {
 
-			$remote = wp_remote_get( $url );
+			$remote = wp_remote_get( $url, array(
+				'user-agent' => 'Instagram/' . $wp_version . '; ' . home_url()
+			) );
 
 			if ( is_wp_error( $remote ) ) {
 				return new WP_Error( 'site_down', esc_html__( 'Unable to communicate with Instagram.', 'wp-instagram-widget' ) );
@@ -251,7 +253,7 @@ Class null_instagram_widget extends WP_Widget {
 
 				$instagram[] = array(
 					'description' => $caption,
-					'link'        => trailingslashit( '//instagram.com/p/' . $image['node']['shortcode'] ),
+					'link'        => trailingslashit( '//www.instagram.com/p/' . $image['node']['shortcode'] ),
 					'time'        => $image['node']['taken_at_timestamp'],
 					'comments'    => $image['node']['edge_media_to_comment']['count'],
 					'likes'       => $image['node']['edge_liked_by']['count'],
