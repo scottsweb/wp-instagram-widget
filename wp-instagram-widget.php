@@ -201,7 +201,7 @@ Class null_instagram_widget extends WP_Widget {
 				break;
 		}
 
-		if ( false === ( $instagram = get_transient( 'insta-a10-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( false === ( $instagram = get_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ) ) ) ) {
 
 			$remote = wp_remote_get( $url );
 
@@ -261,10 +261,13 @@ Class null_instagram_widget extends WP_Widget {
 				);
 			} // End foreach().
 
-			// do not set an empty transient - should help catch private or empty accounts.
+			// do not set an empty transient - should help catch private or empty accounts. Set a shorter transient in other cases to stop hammering Instagram
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'insta-a10-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 2 ) );
+				set_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 3 ) );
+			} else {
+				$instagram = base64_encode( serialize( array() ) );
+				set_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', MINUTE_IN_SECONDS * 5 ) );
 			}
 		}
 
