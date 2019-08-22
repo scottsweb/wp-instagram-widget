@@ -2,8 +2,8 @@
 Contributors: scottsweb, codeforthepeople
 Tags: instagram, widget, photos, photography, hipster, sidebar, widgets, simple
 Requires at least: 4.4
-Tested up to: 4.9.4
-Stable tag: 2.0.3
+Tested up to: 4.9.5
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -80,6 +80,13 @@ In version 1.9.6 you can now use a filter to change the location of your custom 
 
 == Changelog ==
 
+= 2.0.4 =
+* Should help fix the instagram did not return a 200 issue (for now)
+* Allow plugin to be updated via https://github.com/afragen/github-updater
+* rel="noopener" on target blank setting
+* www all the things
+* Use JSON endpoints
+
 = 2.0.3 =
 * New JSON on the Instagram end, fixes broken usernames
 * Support same tag and username
@@ -94,7 +101,7 @@ In version 1.9.6 you can now use a filter to change the location of your custom 
 * Ability to track tags / hashtags instead of just usernames (e.g. #cheese)
 * New filter for custom link class
 * Bundle German language (props jensteichert)
-* Other minor fixes and formatting 
+* Other minor fixes and formatting
 
 = 1.9.8 =
 * Return more items when using filter for images only

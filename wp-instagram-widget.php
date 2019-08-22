@@ -3,13 +3,14 @@
 Plugin Name: WP Instagram Widget
 Plugin URI: https://github.com/scottsweb/wp-instagram-widget
 Description: A WordPress widget for showing your latest Instagram photos.
-Version: 2.0.3
+Version: 2.0.4
 Author: Scott Evans
 Author URI: https://scott.ee
 Text Domain: wp-instagram-widget
 Domain Path: /assets/languages/
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
+GitHub Plugin URI: scottsweb/wp-instagram-widget
 
 Copyright © 2013 Scott Evans
 
@@ -105,7 +106,8 @@ Class null_instagram_widget extends WP_Widget {
 					if ( locate_template( $template_part ) !== '' ) {
 						include locate_template( $template_part );
 					} else {
-						echo '<li class="' . esc_attr( $liclass ) . '"><a href="' . esc_url( $item['link'] ) . '" target="' . esc_attr( $target ) . '"  class="' . esc_attr( $aclass ) . '"><img src="' . esc_url( $item[$size] ) . '"  alt="' . esc_attr( $item['description'] ) . '" title="' . esc_attr( $item['description'] ) . '"  class="' . esc_attr( $imgclass ) . '"/></a></li>';
+						$rel = ( $target === '_blank') ? 'noopener' : '';
+						echo '<li class="' . esc_attr( $liclass ) . '"><a href="' . esc_url( $item['link'] ) . '" target="' . esc_attr( $target ) . '" rel="' . esc_attr( $rel ) . '"  class="' . esc_attr( $aclass ) . '"><img src="' . esc_url( $item[$size] ) . '"  alt="' . esc_attr( $item['description'] ) . '" title="' . esc_attr( $item['description'] ) . '"  class="' . esc_attr( $imgclass ) . '"/></a></li>';
 					}
 				}
 				?></ul><?php
@@ -117,16 +119,17 @@ Class null_instagram_widget extends WP_Widget {
 
 		switch ( substr( $username, 0, 1 ) ) {
 			case '#':
-				$url = '//instagram.com/explore/tags/' . str_replace( '#', '', $username );
+				$url = '//www.instagram.com/explore/tags/' . str_replace( '#', '', $username );
 				break;
 
 			default:
-				$url = '//instagram.com/' . str_replace( '@', '', $username );
+				$url = '//www.instagram.com/' . str_replace( '@', '', $username );
 				break;
 		}
 
 		if ( '' !== $link ) {
-			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo trailingslashit( esc_url( $url ) ); ?>" rel="me" target="<?php echo esc_attr( $target ); ?>" class="<?php echo esc_attr( $linkaclass ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
+			$relme = ( $target === '_blank') ? 'noopener' : 'me';
+			?><p class="<?php echo esc_attr( $linkclass ); ?>"><a href="<?php echo trailingslashit( esc_url( $url ) ); ?>" rel="<?php echo esc_attr( $relme ); ?>" target="<?php echo esc_attr( $target ); ?>" class="<?php echo esc_attr( $linkaclass ); ?>"><?php echo wp_kses_post( $link ); ?></a></p><?php
 		}
 
 		do_action( 'wpiw_after_widget', $instance );
@@ -183,26 +186,39 @@ Class null_instagram_widget extends WP_Widget {
 		return $instance;
 	}
 
-	// based on https://gist.github.com/cosmocatalano/4544576.
 	function scrape_instagram( $username ) {
+		global $wp_version;
+
+		$proxies = array(
+			'https://boomproxy.com/browse.php?u=',
+			'https://us.hidester.com/proxy.php?u=',
+			'https://proxy-us1.toolur.com/browse.php?u=',
+			'https://proxy-fr1.toolur.com/browse.php?u=',
+		);
 
 		$username = trim( strtolower( $username ) );
 
 		switch ( substr( $username, 0, 1 ) ) {
 			case '#':
-				$url              = 'https://instagram.com/explore/tags/' . str_replace( '#', '', $username );
+				$url              = 'https://www.instagram.com/explore/tags/' . str_replace( '#', '', $username ) . '?__a=1';
 				$transient_prefix = 'h';
 				break;
 
 			default:
-				$url              = 'https://instagram.com/' . str_replace( '@', '', $username );
+				$url              = 'https://www.instagram.com/' . str_replace( '@', '', $username ) . '?__a=1';
 				$transient_prefix = 'u';
 				break;
 		}
 
-		if ( false === ( $instagram = get_transient( 'insta-a10-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ) ) ) ) {
+		if ( $proxy = apply_filters( 'wpiw_proxy', false ) ) {
+			$url = $proxies[ array_rand( $proxies ) ] . urlencode( $url );
+		}
 
-			$remote = wp_remote_get( $url );
+		if ( false === ( $instagram = get_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ) ) ) ) {
+
+			$remote = wp_remote_get( $url, array(
+				'user-agent' => 'Instagram/' . $wp_version . '; ' . home_url()
+			) );
 
 			if ( is_wp_error( $remote ) ) {
 				return new WP_Error( 'site_down', esc_html__( 'Unable to communicate with Instagram.', 'wp-instagram-widget' ) );
@@ -212,18 +228,16 @@ Class null_instagram_widget extends WP_Widget {
 				return new WP_Error( 'invalid_response', esc_html__( 'Instagram did not return a 200.', 'wp-instagram-widget' ) );
 			}
 
-			$shards      = explode( 'window._sharedData = ', $remote['body'] );
-			$insta_json  = explode( ';</script>', $shards[1] );
-			$insta_array = json_decode( $insta_json[0], true );
+			$insta_array = json_decode( $remote['body'], true );
 
 			if ( ! $insta_array ) {
 				return new WP_Error( 'bad_json', esc_html__( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 			}
 
-			if ( isset( $insta_array['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['edges'] ) ) {
-				$images = $insta_array['entry_data']['ProfilePage'][0]['graphql']['user']['edge_owner_to_timeline_media']['edges'];
-			} elseif ( isset( $insta_array['entry_data']['TagPage'][0]['graphql']['hashtag']['edge_hashtag_to_media']['edges'] ) ) {
-				$images = $insta_array['entry_data']['TagPage'][0]['graphql']['hashtag']['edge_hashtag_to_media']['edges'];
+			if ( isset( $insta_array['graphql']['user']['edge_owner_to_timeline_media']['edges'] ) ) {
+				$images = $insta_array['graphql']['user']['edge_owner_to_timeline_media']['edges'];
+			} elseif ( isset( $insta_array['graphql']['hashtag']['edge_hashtag_to_media']['edges'] ) ) {
+				$images = $insta_array['graphql']['hashtag']['edge_hashtag_to_media']['edges'];
 			} else {
 				return new WP_Error( 'bad_json_2', esc_html__( 'Instagram has returned invalid data.', 'wp-instagram-widget' ) );
 			}
@@ -248,7 +262,7 @@ Class null_instagram_widget extends WP_Widget {
 
 				$instagram[] = array(
 					'description' => $caption,
-					'link'        => trailingslashit( '//instagram.com/p/' . $image['node']['shortcode'] ),
+					'link'        => trailingslashit( '//www.instagram.com/p/' . $image['node']['shortcode'] ),
 					'time'        => $image['node']['taken_at_timestamp'],
 					'comments'    => $image['node']['edge_media_to_comment']['count'],
 					'likes'       => $image['node']['edge_liked_by']['count'],
@@ -260,10 +274,13 @@ Class null_instagram_widget extends WP_Widget {
 				);
 			} // End foreach().
 
-			// do not set an empty transient - should help catch private or empty accounts.
+			// do not set an empty transient - should help catch private or empty accounts. Set a shorter transient in other cases to stop hammering Instagram
 			if ( ! empty( $instagram ) ) {
 				$instagram = base64_encode( serialize( $instagram ) );
-				set_transient( 'insta-a10-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 2 ) );
+				set_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', HOUR_IN_SECONDS * 3 ) );
+			} else {
+				$instagram = base64_encode( serialize( array() ) );
+				set_transient( 'wpiw-01-' . $transient_prefix . '-' . sanitize_title_with_dashes( $username ), $instagram, apply_filters( 'null_instagram_cache_time', MINUTE_IN_SECONDS * 10 ) );
 			}
 		}
 
